@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>InvoiceDesk</value>
+  </data>
+  <data name="CompanyLabel" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="NewDraft" xml:space="preserve">
+    <value>New Draft</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Issue</value>
+  </data>
+  <data name="ExportPdf" xml:space="preserve">
+    <value>Export PDF</value>
+  </data>
+  <data name="DeleteInvoice" xml:space="preserve">
+    <value>Delete Invoice</value>
+  </data>
+  <data name="ManageCompanies" xml:space="preserve">
+    <value>Companies</value>
+  </data>
+  <data name="ManageCustomers" xml:space="preserve">
+    <value>Customers</value>
+  </data>
+  <data name="InvoiceList" xml:space="preserve">
+    <value>Invoices</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="FromDate" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="ToDate" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="IssueDate" xml:space="preserve">
+    <value>Issue date</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="InvoiceLanguageLabel" xml:space="preserve">
+    <value>Invoice language</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="SubTotal" xml:space="preserve">
+    <value>Sub total</value>
+  </data>
+  <data name="TaxTotal" xml:space="preserve">
+    <value>Tax total</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Lines</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="QuantityLabel" xml:space="preserve">
+    <value>Qty</value>
+  </data>
+  <data name="UnitPriceLabel" xml:space="preserve">
+    <value>Unit price</value>
+  </data>
+  <data name="TaxRateLabel" xml:space="preserve">
+    <value>Tax rate</value>
+  </data>
+  <data name="VatTypeLabel" xml:space="preserve">
+    <value>VAT type</value>
+  </data>
+  <data name="AddLine" xml:space="preserve">
+    <value>Add line</value>
+  </data>
+  <data name="RemoveLine" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="StatusDraft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="StatusIssued" xml:space="preserve">
+    <value>Issued</value>
+  </data>
+  <data name="StatusPaid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="StatusCancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Invoice #</value>
+  </data>
+  <data name="PdfSubTotalLabel" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="PdfTaxTotalLabel" xml:space="preserve">
+    <value>Tax</value>
+  </data>
+  <data name="PdfGrandTotalLabel" xml:space="preserve">
+    <value>Grand total</value>
+  </data>
+  <data name="PdfNotes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="PdfVatSummary" xml:space="preserve">
+    <value>VAT summary</value>
+  </data>
+  <data name="PdfCompany" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="PdfCustomer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="PdfInvoiceNumber" xml:space="preserve">
+    <value>Invoice number</value>
+  </data>
+  <data name="PdfIssueDate" xml:space="preserve">
+    <value>Issue date</value>
+  </data>
+  <data name="PdfLegalReverseCharge" xml:space="preserve">
+    <value>Reverse charge applies (intra-EU B2B). The customer accounts for VAT.</value>
+  </data>
+  <data name="PdfLegalExport" xml:space="preserve">
+    <value>Export outside the EU - VAT exempt under EU law.</value>
+  </data>
+  <data name="PdfLegalVatExempt" xml:space="preserve">
+    <value>VAT exempt goods or services.</value>
+  </data>
+  <data name="VatTypeDomestic" xml:space="preserve">
+    <value>Domestic</value>
+  </data>
+  <data name="VatTypeIntraEuReverseCharge" xml:space="preserve">
+    <value>Intra-EU reverse charge</value>
+  </data>
+  <data name="VatTypeExportOutsideEu" xml:space="preserve">
+    <value>Export outside EU</value>
+  </data>
+  <data name="VatTypeExempt" xml:space="preserve">
+    <value>VAT exempt</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="VatLabel" xml:space="preserve">
+    <value>VAT</value>
+  </data>
+  <data name="EikLabel" xml:space="preserve">
+    <value>EIK</value>
+  </data>
+  <data name="CountryLabel" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AddressLabel" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="PhoneLabel" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="IbanLabel" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="BicLabel" xml:space="preserve">
+    <value>BIC</value>
+  </data>
+  <data name="PrefixLabel" xml:space="preserve">
+    <value>Prefix</value>
+  </data>
+  <data name="NextNumberLabel" xml:space="preserve">
+    <value>Next #</value>
+  </data>
+  <data name="LogoLabel" xml:space="preserve">
+    <value>Logo path</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="VatRegisteredLabel" xml:space="preserve">
+    <value>VAT registered</value>
+  </data>
+  <data name="MessageSelectCompanyCustomers" xml:space="preserve">
+    <value>Please select a company and create customers first.</value>
+  </data>
+  <data name="MessageDraftCreated" xml:space="preserve">
+    <value>Draft created.</value>
+  </data>
+  <data name="MessageSelectCustomer" xml:space="preserve">
+    <value>Select a customer first.</value>
+  </data>
+  <data name="MessageSaveDraftOnly" xml:space="preserve">
+    <value>Only draft invoices can be saved.</value>
+  </data>
+  <data name="MessageInvoiceSaved" xml:space="preserve">
+    <value>Invoice saved.</value>
+  </data>
+  <data name="MessageInvoiceIssued" xml:space="preserve">
+    <value>Invoice {0} issued.</value>
+  </data>
+  <data name="MessagePdfIssuedOnly" xml:space="preserve">
+    <value>Only issued invoices can be exported.</value>
+  </data>
+  <data name="MessageExportingPdf" xml:space="preserve">
+    <value>Exporting PDF...</value>
+  </data>
+  <data name="MessagePdfExported" xml:space="preserve">
+    <value>PDF exported to {0} (folder: Exports)</value>
+  </data>
+  <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
+    <value>This action cannot be undone. Delete the invoice?</value>
+  </data>
+  <data name="MessageInvoiceDeleted" xml:space="preserve">
+    <value>Invoice deleted.</value>
+  </data>
+  <data name="MessageInvoiceDeleteFailed" xml:space="preserve">
+    <value>Delete failed. Only draft invoices can be deleted.</value>
+  </data>
+  <data name="MessageDeleteDraftOnly" xml:space="preserve">
+    <value>Only draft invoices can be deleted.</value>
+  </data>
+  <data name="MessageCompanyDeleteIssued" xml:space="preserve">
+    <value>Cannot delete a company with issued invoices.</value>
+  </data>
+  <data name="MessageCompanyDeleteFailed" xml:space="preserve">
+    <value>Company delete failed.</value>
+  </data>
+  <data name="MessageCustomerDeleteHasInvoices" xml:space="preserve">
+    <value>Cannot delete this customer because invoices exist for them.</value>
+  </data>
+  <data name="MessageCustomerDeleteFailed" xml:space="preserve">
+    <value>Customer delete failed.</value>
+  </data>
+  <data name="MessageCustomerSaved" xml:space="preserve">
+    <value>Customer saved.</value>
+  </data>
+  <data name="MessageCompanySaved" xml:space="preserve">
+    <value>Company saved.</value>
+  </data>
+</root>

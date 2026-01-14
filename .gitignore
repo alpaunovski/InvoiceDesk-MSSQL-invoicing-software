@@ -22,6 +22,15 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+InvoiceDesk/logs/
+
+# Local runtime logs copied for inspection
+InvoiceDesk/logs/app.log
+
+# Top Secret files
+**/MyTopSecretInfos.txt
+
+
 
 # .NET Core
 project.lock.json
@@ -52,3 +61,7 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+.fake
+InvoiceDesk/Exports/Invoice-CHI1.pdf
+InvoiceDesk/Exports/Invoice-DON2.pdf
+InvoiceDesk/Exports/Invoice-DON3.pdf

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>InvoiceDesk</value>
+  </data>
+  <data name="CompanyLabel" xml:space="preserve">
+    <value>Фирма</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Език</value>
+  </data>
+  <data name="NewDraft" xml:space="preserve">
+    <value>Нова чернова</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Запази</value>
+  </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Издай</value>
+  </data>
+  <data name="ExportPdf" xml:space="preserve">
+    <value>Експорт в PDF</value>
+  </data>
+  <data name="DeleteInvoice" xml:space="preserve">
+    <value>Изтриване на фактура</value>
+  </data>
+  <data name="ManageCompanies" xml:space="preserve">
+    <value>Фирми</value>
+  </data>
+  <data name="ManageCustomers" xml:space="preserve">
+    <value>Клиенти</value>
+  </data>
+  <data name="InvoiceList" xml:space="preserve">
+    <value>Фактури</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Търси</value>
+  </data>
+  <data name="FromDate" xml:space="preserve">
+    <value>От</value>
+  </data>
+  <data name="ToDate" xml:space="preserve">
+    <value>До</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Клиент</value>
+  </data>
+  <data name="IssueDate" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="StatusLabel" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="InvoiceLanguageLabel" xml:space="preserve">
+    <value>Език на фактурата</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Валута</value>
+  </data>
+  <data name="SubTotal" xml:space="preserve">
+    <value>Междинна сума</value>
+  </data>
+  <data name="TaxTotal" xml:space="preserve">
+    <value>ДДС</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Общо</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Бележки</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Редове</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="QuantityLabel" xml:space="preserve">
+    <value>К-во</value>
+  </data>
+  <data name="UnitPriceLabel" xml:space="preserve">
+    <value>Ед. цена</value>
+  </data>
+  <data name="TaxRateLabel" xml:space="preserve">
+    <value>Данъчна ставка</value>
+  </data>
+  <data name="VatTypeLabel" xml:space="preserve">
+    <value>Тип ДДС</value>
+  </data>
+  <data name="AddLine" xml:space="preserve">
+    <value>Добави ред</value>
+  </data>
+  <data name="RemoveLine" xml:space="preserve">
+    <value>Премахни</value>
+  </data>
+  <data name="StatusDraft" xml:space="preserve">
+    <value>Чернова</value>
+  </data>
+  <data name="StatusIssued" xml:space="preserve">
+    <value>Издадена</value>
+  </data>
+  <data name="StatusPaid" xml:space="preserve">
+    <value>Платена</value>
+  </data>
+  <data name="StatusCancelled" xml:space="preserve">
+    <value>Отменена</value>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Номер</value>
+  </data>
+  <data name="PdfSubTotalLabel" xml:space="preserve">
+    <value>Междинна сума</value>
+  </data>
+  <data name="PdfTaxTotalLabel" xml:space="preserve">
+    <value>ДДС</value>
+  </data>
+  <data name="PdfGrandTotalLabel" xml:space="preserve">
+    <value>Общо</value>
+  </data>
+  <data name="PdfNotes" xml:space="preserve">
+    <value>Бележки</value>
+  </data>
+  <data name="PdfVatSummary" xml:space="preserve">
+    <value>Обобщение на ДДС</value>
+  </data>
+  <data name="PdfCompany" xml:space="preserve">
+    <value>Фирма</value>
+  </data>
+  <data name="PdfCustomer" xml:space="preserve">
+    <value>Клиент</value>
+  </data>
+  <data name="PdfInvoiceNumber" xml:space="preserve">
+    <value>Номер на фактура</value>
+  </data>
+  <data name="PdfIssueDate" xml:space="preserve">
+    <value>Дата на издаване</value>
+  </data>
+  <data name="PdfLegalReverseCharge" xml:space="preserve">
+    <value>Обратно начисляване (вътре-ЕС B2B). Клиентът самоначислява ДДС.</value>
+  </data>
+  <data name="PdfLegalExport" xml:space="preserve">
+    <value>Износ извън ЕС - освободено от ДДС.</value>
+  </data>
+  <data name="PdfLegalVatExempt" xml:space="preserve">
+    <value>Освободена доставка по ДДС.</value>
+  </data>
+  <data name="VatTypeDomestic" xml:space="preserve">
+    <value>Вътрешно</value>
+  </data>
+  <data name="VatTypeIntraEuReverseCharge" xml:space="preserve">
+    <value>Вътре-ЕС обратно начисляване</value>
+  </data>
+  <data name="VatTypeExportOutsideEu" xml:space="preserve">
+    <value>Износ извън ЕС</value>
+  </data>
+  <data name="VatTypeExempt" xml:space="preserve">
+    <value>Освободено</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="VatLabel" xml:space="preserve">
+    <value>ДДС</value>
+  </data>
+  <data name="EikLabel" xml:space="preserve">
+    <value>ЕИК</value>
+  </data>
+  <data name="CountryLabel" xml:space="preserve">
+    <value>Държава</value>
+  </data>
+  <data name="AddressLabel" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="EmailLabel" xml:space="preserve">
+    <value>Имейл</value>
+  </data>
+  <data name="PhoneLabel" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="IbanLabel" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="BicLabel" xml:space="preserve">
+    <value>BIC</value>
+  </data>
+  <data name="PrefixLabel" xml:space="preserve">
+    <value>Префикс</value>
+  </data>
+  <data name="NextNumberLabel" xml:space="preserve">
+    <value>Следващ номер</value>
+  </data>
+  <data name="LogoLabel" xml:space="preserve">
+    <value>Лого</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Изтрий</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Затвори</value>
+  </data>
+  <data name="VatRegisteredLabel" xml:space="preserve">
+    <value>Регистриран по ДДС</value>
+  </data>
+  <data name="MessageSelectCompanyCustomers" xml:space="preserve">
+    <value>Моля, изберете фирма и създайте клиенти.</value>
+  </data>
+  <data name="MessageDraftCreated" xml:space="preserve">
+    <value>Създадена чернова.</value>
+  </data>
+    <data name="MessageSelectCustomer" xml:space="preserve">
+      <value>Изберете клиент първо.</value>
+    </data>
+  <data name="MessageSaveDraftOnly" xml:space="preserve">
+    <value>Само чернови могат да се записват.</value>
+  </data>
+  <data name="MessageInvoiceSaved" xml:space="preserve">
+    <value>Фактурата е записана.</value>
+  </data>
+  <data name="MessageInvoiceIssued" xml:space="preserve">
+    <value>Фактура {0} е издадена.</value>
+  </data>
+  <data name="MessagePdfIssuedOnly" xml:space="preserve">
+    <value>Само издадени фактури могат да се експортират.</value>
+  </data>
+    <data name="MessageExportingPdf" xml:space="preserve">
+      <value>Експортиране на PDF...</value>
+    </data>
+  <data name="MessagePdfExported" xml:space="preserve">
+      <value>PDF е генериран в {0} (папка: Exports).</value>
+  </data>
+  <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
+    <value>Действието е необратимо. Да изтрия ли фактурата?</value>
+  </data>
+  <data name="MessageInvoiceDeleted" xml:space="preserve">
+    <value>Фактурата е изтрита.</value>
+  </data>
+  <data name="MessageInvoiceDeleteFailed" xml:space="preserve">
+    <value>Изтриването се провали. Само чернови могат да се изтриват.</value>
+  </data>
+  <data name="MessageDeleteDraftOnly" xml:space="preserve">
+    <value>Само чернови могат да се изтриват.</value>
+  </data>
+  <data name="MessageCompanyDeleteIssued" xml:space="preserve">
+    <value>Не може да изтриете фирма с издадени фактури.</value>
+  </data>
+  <data name="MessageCompanyDeleteFailed" xml:space="preserve">
+    <value>Изтриването на фирмата се провали.</value>
+  </data>
+  <data name="MessageCustomerDeleteHasInvoices" xml:space="preserve">
+    <value>Не може да изтриете този клиент, защото има фактури към него.</value>
+  </data>
+  <data name="MessageCustomerDeleteFailed" xml:space="preserve">
+    <value>Изтриването на клиента се провали.</value>
+  </data>
+  <data name="MessageCustomerSaved" xml:space="preserve">
+    <value>Клиентът е записан.</value>
+  </data>
+  <data name="MessageCompanySaved" xml:space="preserve">
+    <value>Фирмата е записана.</value>
+  </data>
+</root>
