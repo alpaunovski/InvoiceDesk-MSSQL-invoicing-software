@@ -161,7 +161,10 @@ public partial class App : Application
 
 			services.AddDbContextFactory<AppDbContext>(options =>
 			{
-				options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+				options.UseSqlServer(connectionString, sql =>
+				{
+					sql.EnableRetryOnFailure();
+				});
 				options.EnableDetailedErrors();
 			});
 

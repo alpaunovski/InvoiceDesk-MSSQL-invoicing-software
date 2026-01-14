@@ -17,11 +17,10 @@ namespace InvoiceDesk.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "InvoiceLanguage",
                 table: "Invoices",
-                type: "varchar(8)",
+                type: "nvarchar(8)",
                 maxLength: 8,
                 nullable: false,
-                defaultValue: "en")
-                .Annotation("MySql:CharSet", "utf8mb4");
+                defaultValue: "en");
         }
 
         /// <inheritdoc />

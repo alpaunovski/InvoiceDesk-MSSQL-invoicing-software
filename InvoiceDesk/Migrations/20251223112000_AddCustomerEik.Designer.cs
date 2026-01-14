@@ -21,330 +21,318 @@ namespace InvoiceDesk.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("InvoiceDesk.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+                modelBuilder.Entity("InvoiceDesk.Models.Company", b =>
+                    {
+                        b.Property<int>("Id")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("int");
+
+                        b.Property<string>("Address")
+                            .IsRequired()
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)");
+
+                        b.Property<string>("BankBic")
+                            .IsRequired()
+                            .HasMaxLength(32)
+                            .HasColumnType("nvarchar(32)");
+
+                        b.Property<string>("BankIban")
+                            .IsRequired()
+                            .HasMaxLength(64)
+                            .HasColumnType("nvarchar(64)");
+
+                        b.Property<string>("CountryCode")
+                            .IsRequired()
+                            .HasMaxLength(8)
+                            .HasColumnType("nvarchar(8)");
+
+                        b.Property<string>("Eik")
+                            .HasMaxLength(13)
+                            .HasColumnType("nvarchar(13)");
+
+                        b.Property<string>("InvoiceNumberPrefix")
+                            .HasMaxLength(32)
+                            .HasColumnType("nvarchar(32)");
+
+                        b.Property<string>("LogoPath")
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)");
+
+                        b.Property<string>("Name")
+                            .IsRequired()
+                            .HasMaxLength(200)
+                            .HasColumnType("nvarchar(200)");
+
+                        b.Property<int>("NextInvoiceNumber")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("int")
+                            .HasDefaultValue(1);
+
+                        b.Property<string>("VatNumber")
+                            .IsRequired()
+                            .HasMaxLength(50)
+                            .HasColumnType("nvarchar(50)");
+
+                        b.HasKey("Id");
+
+                        b.ToTable("Companies");
+                    });
+
+                modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
+                    {
+                        b.Property<int>("Id")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("int");
+
+                        b.Property<string>("Address")
+                            .IsRequired()
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)");
+
+                        b.Property<int>("CompanyId")
+                            .HasColumnType("int");
+
+                        b.Property<string>("CountryCode")
+                            .IsRequired()
+                            .HasMaxLength(8)
+                            .HasColumnType("nvarchar(8)");
+
+                        b.Property<string>("Eik")
+                            .HasMaxLength(13)
+                            .HasColumnType("nvarchar(13)");
+
+                        b.Property<string>("Email")
+                            .IsRequired()
+                            .HasMaxLength(200)
+                            .HasColumnType("nvarchar(200)");
+
+                        b.Property<bool>("IsVatRegistered")
+                            .HasColumnType("bit");
+
+                        b.Property<string>("Name")
+                            .IsRequired()
+                            .HasMaxLength(200)
+                            .HasColumnType("nvarchar(200)");
+
+                        b.Property<string>("Phone")
+                            .IsRequired()
+                            .HasMaxLength(50)
+                            .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("BankBic")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
-
-                    b.Property<string>("BankIban")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        b.Property<string>("VatNumber")
+                            .HasMaxLength(50)
+                            .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("CountryCode")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
+                        b.HasKey("Id");
 
-                    b.Property<string>("Eik")
-                        .HasMaxLength(13)
-                        .HasColumnType("varchar(13)");
+                        b.HasIndex("CompanyId", "Name");
 
-                    b.Property<string>("InvoiceNumberPrefix")
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
+                        b.ToTable("Customers");
+                    });
 
-                    b.Property<string>("LogoPath")
-                        .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
+                    {
+                        b.Property<int>("Id")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        b.Property<int>("CompanyId")
+                            .HasColumnType("int");
 
-                    b.Property<int>("NextInvoiceNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.Property<string>("VatNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                        b.Property<string>("Currency")
+                            .IsRequired()
+                            .HasMaxLength(8)
+                            .HasColumnType("nvarchar(8)");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CountryCode")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
+                        b.Property<string>("CustomerAddressSnapshot")
+                            .IsRequired()
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)");
 
-                    b.Property<string>("Eik")
-                        .HasMaxLength(13)
-                        .HasColumnType("varchar(13)");
+                        b.Property<int>("CustomerId")
+                            .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<bool>("IsVatRegistered")
-                        .HasColumnType("bit(1)");
+                        b.Property<string>("CustomerNameSnapshot")
+                            .IsRequired()
+                            .HasMaxLength(200)
+                            .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        b.Property<string>("CustomerVatSnapshot")
+                            .IsRequired()
+                            .HasMaxLength(64)
+                            .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        b.Property<string>("InvoiceLanguage")
+                            .IsRequired()
+                            .ValueGeneratedOnAdd()
+                            .HasMaxLength(8)
+                            .HasColumnType("nvarchar(8)")
+                            .HasDefaultValue("en");
 
-                    b.Property<string>("VatNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        b.Property<string>("InvoiceNumber")
+                            .IsRequired()
+                            .HasMaxLength(64)
+                            .HasColumnType("nvarchar(64)");
 
-                    b.HasKey("Id");
+                        b.Property<DateTime>("IssueDate")
+                            .HasColumnType("datetime2");
 
-                    b.HasIndex("CompanyId", "Name");
+                        b.Property<DateTime?>("IssuedAtUtc")
+                            .HasColumnType("datetime2");
 
-                    b.ToTable("Customers");
-                });
+                        b.Property<byte[]>("IssuedPdf")
+                            .HasColumnType("varbinary(max)");
 
-            modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        b.Property<DateTime?>("IssuedPdfCreatedAtUtc")
+                            .HasColumnType("datetime2");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        b.Property<string>("IssuedPdfFileName")
+                            .HasMaxLength(255)
+                            .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
+                        b.Property<string>("IssuedPdfSha256")
+                            .HasMaxLength(64)
+                            .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)");
+                        b.Property<string>("Notes")
+                            .HasMaxLength(1000)
+                            .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("CustomerAddressSnapshot")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                        b.Property<int>("Status")
+                            .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                        b.Property<decimal>("SubTotal")
+                            .HasPrecision(18, 2)
+                            .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CustomerNameSnapshot")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        b.Property<decimal>("TaxTotal")
+                            .HasPrecision(18, 2)
+                            .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CustomerVatSnapshot")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        b.Property<decimal>("Total")
+                            .HasPrecision(18, 2)
+                            .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("InvoiceLanguage")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(8)
-                        .HasColumnType("varchar(8)")
-                        .HasDefaultValue("en");
+                        b.HasKey("Id");
 
-                    b.Property<string>("InvoiceNumber")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        b.HasIndex("CustomerId");
 
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime(6)");
+                        b.HasIndex("CompanyId", "CustomerId");
 
-                    b.Property<DateTime?>("IssuedAtUtc")
-                        .HasColumnType("datetime(6)");
+                        b.HasIndex("CompanyId", "InvoiceNumber")
+                            .IsUnique();
 
-                    b.Property<byte[]>("IssuedPdf")
-                        .HasColumnType("longblob");
+                        b.HasIndex("CompanyId", "IssueDate");
 
-                    b.Property<DateTime?>("IssuedPdfCreatedAtUtc")
-                        .HasColumnType("datetime(6)");
+                        b.ToTable("Invoices");
+                    });
 
-                    b.Property<string>("IssuedPdfFileName")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                modelBuilder.Entity("InvoiceDesk.Models.InvoiceLine", b =>
+                    {
+                        b.Property<int>("Id")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("int");
 
-                    b.Property<string>("IssuedPdfSha256")
-                        .HasMaxLength(64)
-                        .HasColumnType("varchar(64)");
+                        b.Property<int>("CompanyId")
+                            .HasColumnType("int");
 
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        b.Property<string>("Description")
+                            .IsRequired()
+                            .HasMaxLength(400)
+                            .HasColumnType("nvarchar(400)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                        b.Property<int>("InvoiceId")
+                            .HasColumnType("int");
 
-                    b.Property<decimal>("SubTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        b.Property<decimal>("LineTotal")
+                            .HasPrecision(18, 2)
+                            .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("TaxTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        b.Property<decimal>("Qty")
+                            .HasPrecision(18, 3)
+                            .HasColumnType("decimal(18,3)");
 
-                    b.Property<decimal>("Total")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        b.Property<decimal>("TaxRate")
+                            .HasPrecision(5, 4)
+                            .HasColumnType("decimal(5,4)");
 
-                    b.HasKey("Id");
+                        b.Property<decimal>("UnitPrice")
+                            .HasPrecision(18, 2)
+                            .HasColumnType("decimal(18,2)");
 
-                    b.HasIndex("CompanyId", "CustomerId");
+                        b.Property<int>("VatType")
+                            .HasColumnType("int");
 
-                    b.HasIndex("CompanyId", "InvoiceNumber")
-                        .IsUnique();
+                        b.HasKey("Id");
 
-                    b.HasIndex("CompanyId", "IssueDate");
+                        b.HasIndex("InvoiceId");
 
-                    b.HasIndex("CustomerId");
+                        b.ToTable("InvoiceLines");
+                    });
 
-                    b.ToTable("Invoices");
-                });
+                modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
+                    {
+                        b.HasOne("InvoiceDesk.Models.Company", "Company")
+                            .WithMany("Customers")
+                            .HasForeignKey("CompanyId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("InvoiceDesk.Models.InvoiceLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        b.Navigation("Company");
+                    });
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
+                    {
+                        b.HasOne("InvoiceDesk.Models.Company", "Company")
+                            .WithMany("Invoices")
+                            .HasForeignKey("CompanyId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
+                        b.HasOne("InvoiceDesk.Models.Customer", "Customer")
+                            .WithMany("Invoices")
+                            .HasForeignKey("CustomerId")
+                            .OnDelete(DeleteBehavior.Restrict)
+                            .IsRequired();
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("varchar(400)");
+                        b.Navigation("Company");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
+                        b.Navigation("Customer");
+                    });
 
-                    b.Property<decimal>("LineTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                modelBuilder.Entity("InvoiceDesk.Models.InvoiceLine", b =>
+                    {
+                        b.HasOne("InvoiceDesk.Models.Invoice", "Invoice")
+                            .WithMany("Lines")
+                            .HasForeignKey("InvoiceId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Property<decimal>("Qty")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
+                        b.Navigation("Invoice");
+                    });
 
-                    b.Property<decimal>("TaxRate")
-                        .HasPrecision(5, 4)
-                        .HasColumnType("decimal(5,4)");
+                modelBuilder.Entity("InvoiceDesk.Models.Company", b =>
+                    {
+                        b.Navigation("Customers");
 
-                    b.Property<string>("Unit")
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
+                        b.Navigation("Invoices");
+                    });
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
+                    {
+                        b.Navigation("Invoices");
+                    });
 
-                    b.Property<int>("VatType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("InvoiceLines");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
-                {
-                    b.HasOne("InvoiceDesk.Models.Company", "Company")
-                        .WithMany("Invoices")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InvoiceDesk.Models.Customer", "Customer")
-                        .WithMany("Invoices")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.InvoiceLine", b =>
-                {
-                    b.HasOne("InvoiceDesk.Models.Invoice", "Invoice")
-                        .WithMany("Lines")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
-                {
-                    b.HasOne("InvoiceDesk.Models.Company", "Company")
-                        .WithMany("Customers")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Company", b =>
-                {
-                    b.Navigation("Customers");
-
-                    b.Navigation("Invoices");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Customer", b =>
-                {
-                    b.Navigation("Invoices");
-                });
-
-            modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
-                {
-                    b.Navigation("Lines");
-                });
-#pragma warning restore 612, 618
+                modelBuilder.Entity("InvoiceDesk.Models.Invoice", b =>
+                    {
+                        b.Navigation("Lines");
+                    });
+    #pragma warning restore 612, 618
+            }
         }
     }
-}

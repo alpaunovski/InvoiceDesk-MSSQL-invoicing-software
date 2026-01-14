@@ -13,10 +13,9 @@ namespace InvoiceDesk.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Eik",
                 table: "Companies",
-                type: "varchar(13)",
+                type: "nvarchar(13)",
                 maxLength: 13,
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
+                nullable: true);
         }
 
         /// <inheritdoc />

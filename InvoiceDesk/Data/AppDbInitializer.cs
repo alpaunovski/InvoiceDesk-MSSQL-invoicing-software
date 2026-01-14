@@ -1,5 +1,7 @@
 using InvoiceDesk.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using Microsoft.Extensions.Logging;
 
 namespace InvoiceDesk.Data;
@@ -18,6 +20,7 @@ public class AppDbInitializer
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+        await EnsureDatabaseExistsAsync(db, cancellationToken);
         // Apply pending migrations so the app can run without manual database setup.
         await db.Database.MigrateAsync(cancellationToken);
 
@@ -64,6 +67,38 @@ public class AppDbInitializer
 
         await db.SaveChangesAsync(cancellationToken);
         _logger.LogInformation("Backfilled {Count} invoices missing numbers", missing.Count);
+    }
+
+    private async Task EnsureDatabaseExistsAsync(AppDbContext db, CancellationToken cancellationToken)
+    {
+        var connectionString = db.Database.GetConnectionString() ?? throw new InvalidOperationException("Missing database connection string");
+        var builder = new SqlConnectionStringBuilder(connectionString);
+        if (string.IsNullOrWhiteSpace(builder.InitialCatalog))
+        {
+            throw new InvalidOperationException("Connection string must specify a Database/Initial Catalog name.");
+        }
+
+        var databaseName = builder.InitialCatalog;
+        var masterBuilder = new SqlConnectionStringBuilder(connectionString)
+        {
+            InitialCatalog = "master"
+        };
+
+        await using var connection = new SqlConnection(masterBuilder.ConnectionString);
+        await connection.OpenAsync(cancellationToken);
+
+        const string sql = """
+IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = @name)
+BEGIN
+    DECLARE @cmd nvarchar(max) = 'CREATE DATABASE [' + @name + ']';
+    EXEC (@cmd);
+END
+""";
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.Add(new SqlParameter("@name", SqlDbType.NVarChar, 128) { Value = databaseName });
+        await command.ExecuteNonQueryAsync(cancellationToken);
+        _logger.LogInformation("Ensured database {DatabaseName} exists", databaseName);
     }
 
     private static string GenerateRepairNumber(int companyId, int invoiceId)

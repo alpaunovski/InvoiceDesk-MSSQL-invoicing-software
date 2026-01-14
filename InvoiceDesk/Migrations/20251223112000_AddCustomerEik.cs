@@ -13,22 +13,20 @@ namespace InvoiceDesk.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "VatNumber",
                 table: "Customers",
-                type: "varchar(50)",
+                type: "nvarchar(50)",
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "varchar(50)",
+                oldType: "nvarchar(50)",
                 oldMaxLength: 50)
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
+                ;
 
             migrationBuilder.AddColumn<string>(
                 name: "Eik",
                 table: "Customers",
-                type: "varchar(13)",
+                type: "nvarchar(13)",
                 maxLength: 13,
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
+                nullable: true);
         }
 
         /// <inheritdoc />
@@ -41,16 +39,14 @@ namespace InvoiceDesk.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "VatNumber",
                 table: "Customers",
-                type: "varchar(50)",
+                type: "nvarchar(50)",
                 maxLength: 50,
                 nullable: false,
                 defaultValue: "",
                 oldClrType: typeof(string),
-                oldType: "varchar(50)",
+                oldType: "nvarchar(50)",
                 oldMaxLength: 50,
-                oldNullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4")
-                .OldAnnotation("MySql:CharSet", "utf8mb4");
+                oldNullable: true);
         }
     }
 }
