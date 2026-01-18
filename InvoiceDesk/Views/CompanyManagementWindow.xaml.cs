@@ -74,6 +74,10 @@ public partial class CompanyManagementWindow : Window
             return;
         }
 
+        // End any edit/new transactions before opening the dialog so collection refresh is allowed.
+        CompaniesGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+        CompaniesGrid.CommitEdit(DataGridEditingUnit.Row, true);
+
         var dialog = new OpenFileDialog
         {
             Filter = "Image files (*.png;*.jpg;*.jpeg;*.bmp;*.gif)|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All files (*.*)|*.*",
@@ -101,6 +105,19 @@ public partial class CompanyManagementWindow : Window
 
             // Force the grid to refresh so the new logo path shows immediately.
             var view = CollectionViewSource.GetDefaultView(CompaniesGrid.ItemsSource);
+            if (view is IEditableCollectionView editable)
+            {
+                if (editable.IsAddingNew)
+                {
+                    editable.CommitNew();
+                }
+
+                if (editable.IsEditingItem)
+                {
+                    editable.CommitEdit();
+                }
+            }
+
             view?.Refresh();
         }
     }

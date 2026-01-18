@@ -105,79 +105,93 @@ public class InvoiceService
 
     public async Task<Invoice> IssueInvoiceAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
-        await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
-        await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken); // Serializable to prevent invoice-number races.
+        await using var strategyDb = await _dbFactory.CreateDbContextAsync(cancellationToken);
+        var strategy = strategyDb.Database.CreateExecutionStrategy();
 
-        var invoice = await db.Invoices
-            .Include(i => i.Lines)
-            .Include(i => i.Customer)
-            .Include(i => i.Company)
-            .FirstOrDefaultAsync(i => i.Id == invoiceId && i.CompanyId == _companyContext.CurrentCompanyId, cancellationToken);
-
-        if (invoice == null)
+        var issuedInvoice = await strategy.ExecuteAsync(async () =>
         {
-            throw new InvalidOperationException("Invoice not found");
-        }
+            await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
+            await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken); // Serializable to prevent invoice-number races.
 
-        if (invoice.Status != InvoiceStatus.Draft || invoice.IssuedAtUtc != null)
-        {
-            throw new InvalidOperationException("Only draft invoices can be issued");
-        }
+            var invoice = await db.Invoices
+                .Include(i => i.Lines)
+                .Include(i => i.Customer)
+                .Include(i => i.Company)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId && i.CompanyId == _companyContext.CurrentCompanyId, cancellationToken);
 
-        var company = invoice.Company ?? throw new InvalidOperationException("Invoice company missing");
-        var customer = invoice.Customer ?? throw new InvalidOperationException("Invoice customer missing");
-        invoice.Currency = CurrencyHelper.NormalizeCurrencyOrDefault(invoice.Currency);
+            if (invoice == null)
+            {
+                throw new InvalidOperationException("Invoice not found");
+            }
 
-        var invoiceNumber = string.IsNullOrWhiteSpace(company.InvoiceNumberPrefix)
-            ? company.NextInvoiceNumber.ToString()
-            : $"{company.InvoiceNumberPrefix}{company.NextInvoiceNumber}";
-        company.NextInvoiceNumber += 1;
+            if (invoice.Status != InvoiceStatus.Draft || invoice.IssuedAtUtc != null)
+            {
+                throw new InvalidOperationException("Only draft invoices can be issued");
+            }
 
-        invoice.InvoiceNumber = invoiceNumber;
-        invoice.CustomerNameSnapshot = customer.Name;
-        invoice.CustomerAddressSnapshot = customer.Address;
-        invoice.CustomerVatSnapshot = SelectCustomerTaxIdentifier(customer);
-        if (string.IsNullOrWhiteSpace(invoice.InvoiceLanguage))
-        {
-            invoice.InvoiceLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-        }
-        invoice.IssuedAtUtc = DateTime.UtcNow;
-        invoice.Status = InvoiceStatus.Issued;
-        ApplyTotals(invoice);
+            var company = invoice.Company ?? throw new InvalidOperationException("Invoice company missing");
+            var customer = invoice.Customer ?? throw new InvalidOperationException("Invoice customer missing");
+            invoice.Currency = CurrencyHelper.NormalizeCurrencyOrDefault(invoice.Currency);
 
-        await db.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
+            var invoiceNumber = string.IsNullOrWhiteSpace(company.InvoiceNumberPrefix)
+                ? company.NextInvoiceNumber.ToString()
+                : $"{company.InvoiceNumberPrefix}{company.NextInvoiceNumber}";
+            company.NextInvoiceNumber += 1;
 
-        await _pdfExportService.GenerateAndStoreIssuedPdfAsync(invoice.Id, cancellationToken);
-        _logger.LogInformation("Invoice {InvoiceId} issued with number {InvoiceNumber}", invoice.Id, invoice.InvoiceNumber);
-        return invoice;
+            invoice.InvoiceNumber = invoiceNumber;
+            invoice.CustomerNameSnapshot = customer.Name;
+            invoice.CustomerAddressSnapshot = customer.Address;
+            invoice.CustomerVatSnapshot = SelectCustomerTaxIdentifier(customer);
+            if (string.IsNullOrWhiteSpace(invoice.InvoiceLanguage))
+            {
+                invoice.InvoiceLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            }
+            invoice.IssuedAtUtc = DateTime.UtcNow;
+            invoice.Status = InvoiceStatus.Issued;
+            ApplyTotals(invoice);
+
+            await db.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            _logger.LogInformation("Invoice {InvoiceId} issued with number {InvoiceNumber}", invoice.Id, invoice.InvoiceNumber);
+            return invoice;
+        });
+
+        await _pdfExportService.GenerateAndStoreIssuedPdfAsync(issuedInvoice.Id, cancellationToken);
+        return issuedInvoice;
     }
 
     public async Task<bool> DeleteInvoiceAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
-        await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
-        await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
+        await using var strategyDb = await _dbFactory.CreateDbContextAsync(cancellationToken);
+        var strategy = strategyDb.Database.CreateExecutionStrategy();
 
-        var invoice = await db.Invoices
-            .Include(i => i.Lines)
-            .FirstOrDefaultAsync(i => i.Id == invoiceId && i.CompanyId == _companyContext.CurrentCompanyId, cancellationToken);
-
-        if (invoice == null)
+        return await strategy.ExecuteAsync(async () =>
         {
-            return false;
-        }
+            await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
+            await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
 
-        if (invoice.Status != InvoiceStatus.Draft || invoice.IssuedAtUtc != null)
-        {
-            // Issued/locked invoices should not be deleted; keep data intact.
-            return false;
-        }
+            var invoice = await db.Invoices
+                .Include(i => i.Lines)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId && i.CompanyId == _companyContext.CurrentCompanyId, cancellationToken);
 
-        db.InvoiceLines.RemoveRange(invoice.Lines);
-        db.Invoices.Remove(invoice);
-        await db.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-        return true;
+            if (invoice == null)
+            {
+                return false;
+            }
+
+            if (invoice.Status != InvoiceStatus.Draft || invoice.IssuedAtUtc != null)
+            {
+                // Issued/locked invoices should not be deleted; keep data intact.
+                return false;
+            }
+
+            db.InvoiceLines.RemoveRange(invoice.Lines);
+            db.Invoices.Remove(invoice);
+            await db.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return true;
+        });
     }
 
     private static string GenerateDraftNumber(int companyId)
