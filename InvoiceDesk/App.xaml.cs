@@ -18,6 +18,9 @@ using Microsoft.Extensions.Options;
 
 namespace InvoiceDesk;
 
+/// <summary>
+/// WPF application bootstrapper: wires DI host, logging, culture, and company context before showing UI.
+/// </summary>
 public partial class App : Application
 {
 	private IHost? _host;
@@ -28,6 +31,7 @@ public partial class App : Application
 
 	public App()
 	{
+		// Bootstrap config and file logging before anything else so early failures are captured.
 		_bootstrapConfig = SafeBuildBootstrapConfiguration();
 		_logPath = SafeResolveLogPath(_bootstrapConfig);
 		SafeAttachLogging(_logPath);
@@ -54,6 +58,7 @@ public partial class App : Application
 
 			Resources["Loc"] = _host.Services.GetRequiredService<LocalizedStrings>();
 
+			// Database and seed data must exist before any UI is shown.
 			var initializer = _host.Services.GetRequiredService<AppDbInitializer>();
 			await initializer.InitializeAsync();
 			logger.LogInformation("Database initialized");
@@ -74,6 +79,7 @@ public partial class App : Application
 			await languageService.SetCultureAsync(settings.Culture);
 			logger.LogInformation("Culture set to {Culture}", settings.Culture);
 
+			// Establish the active company context before loading the main window.
 			var companyService = _host.Services.GetRequiredService<CompanyService>();
 			var companyContext = _host.Services.GetRequiredService<ICompanyContext>();
 			var companies = await companyService.GetCompaniesAsync();
@@ -111,6 +117,7 @@ public partial class App : Application
 		}
 		catch (Exception ex)
 		{
+			// Last-chance fallback so startup failures are visible to the user and preserved on disk.
 			logger?.LogCritical(ex, "Application failed to start");
 			SafeAppend(logPath, $"CRITICAL {DateTime.UtcNow:u} {ex}\n");
 			MessageBox.Show(ex.ToString(), "InvoiceDesk startup error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -231,13 +238,14 @@ public partial class App : Application
 			}
 		};
 
-			DispatcherUnhandledException += (_, args) =>
+		// Capture UI thread exceptions so users see a dialog instead of silent crashes.
+		DispatcherUnhandledException += (_, args) =>
 		{
 			try
 			{
-					SafeAppend(logPath, $"DISPATCHER {DateTime.UtcNow:u} {args.Exception}\n");
-					args.Handled = true;
-					MessageBox.Show(args.Exception.ToString(), "Unhandled UI error", MessageBoxButton.OK, MessageBoxImage.Error);
+				SafeAppend(logPath, $"DISPATCHER {DateTime.UtcNow:u} {args.Exception}\n");
+				args.Handled = true;
+				MessageBox.Show(args.Exception.ToString(), "Unhandled UI error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 			catch
 			{
@@ -270,7 +278,7 @@ public partial class App : Application
 			}
 		};
 
-			_loggingAttached = true;
+		_loggingAttached = true;
 	}
 
 	private static void EnableBindingTrace(string logPath)

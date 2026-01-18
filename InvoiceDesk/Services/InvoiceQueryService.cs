@@ -15,6 +15,9 @@ public class InvoiceQueryService
         _companyContext = companyContext;
     }
 
+    /// <summary>
+    /// Searches invoices for the active company with optional text/date/customer filters.
+    /// </summary>
     public async Task<List<Invoice>> SearchAsync(string? search, DateTime? from, DateTime? to, int? customerId, CancellationToken cancellationToken = default)
     {
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
@@ -47,6 +50,9 @@ public class InvoiceQueryService
         return await query.OrderByDescending(i => i.IssueDate).ThenByDescending(i => i.Id).ToListAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Loads a single invoice with lines, customer, and company data for the active company.
+    /// </summary>
     public async Task<Invoice?> GetInvoiceWithLinesAsync(int id, CancellationToken cancellationToken = default)
     {
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);

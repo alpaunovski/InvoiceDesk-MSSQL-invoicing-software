@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace InvoiceDesk.Models;
 
+/// <summary>
+/// Domain invoice entity; stores customer snapshots and issued PDF metadata for immutability.
+/// </summary>
 public class Invoice
 {
     public int Id { get; set; }

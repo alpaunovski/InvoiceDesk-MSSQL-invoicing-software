@@ -1,5 +1,8 @@
 namespace InvoiceDesk.Models;
 
+/// <summary>
+/// Line item tied to an invoice; monetary fields store already-calculated VAT-inclusive totals.
+/// </summary>
 public class InvoiceLine
 {
     public int Id { get; set; }

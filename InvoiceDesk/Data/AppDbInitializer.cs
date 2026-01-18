@@ -17,6 +17,9 @@ public class AppDbInitializer
         _logger = logger;
     }
 
+    /// <summary>
+    /// Ensures the database exists, applies migrations, repairs missing data, and seeds a default company.
+    /// </summary>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
@@ -69,6 +72,9 @@ public class AppDbInitializer
         _logger.LogInformation("Backfilled {Count} invoices missing numbers", missing.Count);
     }
 
+    /// <summary>
+    /// Creates the target database on the SQL Server instance if it does not yet exist.
+    /// </summary>
     private async Task EnsureDatabaseExistsAsync(AppDbContext db, CancellationToken cancellationToken)
     {
         var connectionString = db.Database.GetConnectionString() ?? throw new InvalidOperationException("Missing database connection string");
@@ -101,6 +107,9 @@ END
         _logger.LogInformation("Ensured database {DatabaseName} exists", databaseName);
     }
 
+    /// <summary>
+    /// Generates a deterministic-ish repair number to avoid collisions when backfilling missing invoice numbers.
+    /// </summary>
     private static string GenerateRepairNumber(int companyId, int invoiceId)
     {
         var stamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");

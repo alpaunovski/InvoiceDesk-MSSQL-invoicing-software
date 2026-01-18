@@ -23,6 +23,9 @@ public class InvoiceService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Creates a draft invoice for the specified company/customer, snapshotting customer data for immutability.
+    /// </summary>
     public async Task<Invoice> CreateDraftAsync(int companyId, int customerId, CancellationToken cancellationToken = default)
     {
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
@@ -52,6 +55,9 @@ public class InvoiceService
         return invoice;
     }
 
+    /// <summary>
+    /// Persists edits to a draft invoice and its lines while keeping historical customer snapshots up to date.
+    /// </summary>
     public async Task<Invoice> SaveInvoiceAsync(Invoice invoice, IEnumerable<InvoiceLine> lines, CancellationToken cancellationToken = default)
     {
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
@@ -103,6 +109,9 @@ public class InvoiceService
         return existing;
     }
 
+    /// <summary>
+    /// Issues a draft invoice atomically, assigning the next number and generating the issued PDF.
+    /// </summary>
     public async Task<Invoice> IssueInvoiceAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
         await using var strategyDb = await _dbFactory.CreateDbContextAsync(cancellationToken);
@@ -111,7 +120,8 @@ public class InvoiceService
         var issuedInvoice = await strategy.ExecuteAsync(async () =>
         {
             await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
-            await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken); // Serializable to prevent invoice-number races.
+			// Serializable isolation to avoid races when multiple invoices are issued concurrently.
+			await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
 
             var invoice = await db.Invoices
                 .Include(i => i.Lines)
@@ -161,6 +171,9 @@ public class InvoiceService
         return issuedInvoice;
     }
 
+    /// <summary>
+    /// Deletes a draft invoice and its lines; issued invoices remain immutable.
+    /// </summary>
     public async Task<bool> DeleteInvoiceAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
         await using var strategyDb = await _dbFactory.CreateDbContextAsync(cancellationToken);

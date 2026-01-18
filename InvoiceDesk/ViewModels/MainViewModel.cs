@@ -14,6 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace InvoiceDesk.ViewModels;
 
+/// <summary>
+/// Top-level dashboard view model that coordinates companies, customers, invoices, and commands exposed to the UI.
+/// </summary>
 public partial class MainViewModel : ObservableObject
 {
     private readonly CompanyService _companyService;
@@ -120,6 +123,7 @@ public partial class MainViewModel : ObservableObject
         _companyContext = companyContext;
         _settingsService = settingsService;
         _logger = logger;
+        // React when the active company or UI culture changes so dependent lists refresh.
         _companyContext.CompanyChanged += async (_, id) => await OnCompanyChangedAsync(id);
         _languageService.CultureChanged += (_, _) =>
         {
@@ -177,6 +181,7 @@ public partial class MainViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
+        // Load persisted settings, culture, and initial company scope before populating UI lists.
         var settings = await _settingsService.LoadAsync();
         SelectedCulture = settings.Culture;
         await _languageService.SetCultureAsync(SelectedCulture);
@@ -279,6 +284,7 @@ public partial class MainViewModel : ObservableObject
             StatusMessage = Strings.MessageSelectCustomer;
             return;
         }
+		// Create a draft tied to the selected company and pre-selected customer.
         var draft = await _invoiceService.CreateDraftAsync(SelectedCompany.Id, customerId.Value);
         await LoadInvoicesAsync();
         await SelectInvoiceAsync(draft.Id);
@@ -306,6 +312,7 @@ public partial class MainViewModel : ObservableObject
         {
             SelectedInvoice.RecalculateTotals();
             var entity = SelectedInvoice.ToEntity();
+			// Persist draft changes and then reload the projection list for the UI.
             await _invoiceService.SaveInvoiceAsync(entity, entity.Lines);
             await LoadInvoicesAsync();
             await SelectInvoiceAsync(entity.Id);
@@ -328,6 +335,7 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
+        // Issue assigns the next number, locks the invoice, and generates the PDF.
         var invoice = await _invoiceService.IssueInvoiceAsync(SelectedInvoice.Id);
         await LoadInvoicesAsync();
         await SelectInvoiceAsync(invoice.Id);
@@ -355,6 +363,7 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
+        // Only drafts are deletable; issued invoices remain immutable for auditability.
         var deleted = await _invoiceService.DeleteInvoiceAsync(SelectedInvoice.Id);
         if (!deleted)
         {
@@ -382,6 +391,7 @@ public partial class MainViewModel : ObservableObject
         try
         {
             StatusMessage = Strings.MessageExportingPdf;
+			// PDF export reuses stored bytes when available; otherwise regenerates on demand.
             var path = await _pdfExportService.ExportPdfAsync(SelectedInvoice.Id);
             StatusMessage = string.Format(Strings.MessagePdfExported, path);
             MessageBox.Show(StatusMessage, Strings.ExportPdf, MessageBoxButton.OK, MessageBoxImage.Information);

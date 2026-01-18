@@ -1,6 +1,6 @@
 # InvoiceDesk (WPF, .NET 8)
 
-Multi-company invoice manager built with WPF, EF Core (MySQL), WebView2 PDF export, MVVM, and RESX localization (English/Bulgarian).
+Multi-company invoice manager built with WPF, EF Core (SQL Server), WebView2 PDF export, MVVM, and RESX localization (English/Bulgarian).
 
 ## Disclaimer
 
@@ -8,19 +8,19 @@ Course project; not production-hardened. No warranty. Educational use only.
 
 ## Stack & Key Bits
 - .NET 8 WPF, MVVM via CommunityToolkit.Mvvm
-- EF Core 8 (Pomelo MySQL) with IDbContextFactory
+- EF Core 8 (SQL Server) with IDbContextFactory
 - WebView2 for HTML→PDF (PrintToPdfAsync)
-- RESX localization: `Strings.resx` (en) and `Strings.bg.resx` (bg); `SatelliteResourceLanguages` set to `en;bg`
+- RESX localization: Strings.resx (en) and Strings.bg.resx (bg); SatelliteResourceLanguages limited to en;bg
 
 ## Prerequisites
 - .NET 8 SDK
-- MySQL 8 server (local or reachable); user must have create/alter rights
-- Microsoft Edge WebView2 Runtime (Evergreen) installed
+- SQL Server instance reachable with create/alter rights (LocalDB/Express/remote ok)
+- Microsoft Edge WebView2 Runtime (Evergreen)
 
 ## Configure
-1. Copy/update [InvoiceDesk/appsettings.json](InvoiceDesk/appsettings.json): set `ConnectionStrings:Default`.
-2. Ensure the database user can create/alter the target database.
-3. Optional: change logging path (`Logging:FilePath`); defaults to `logs/app.log` under workspace.
+1. Copy/update [InvoiceDesk/appsettings.json](InvoiceDesk/appsettings.json): set ConnectionStrings:Default.
+2. Ensure the SQL login can create/alter the target database; the app will create it if missing.
+3. Optional: change Logging:FilePath (defaults to logs/app.log under workspace) and Pdf:OutputDirectory (defaults to exports under workspace).
 
 ## Database
 ```
@@ -28,7 +28,7 @@ cd InvoiceDesk
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
-- Uses migrations (no EnsureCreated). On first run seeds one default Company if DB empty.
+- Uses migrations (no EnsureCreated). AppDbInitializer creates the database if absent and seeds one default Company when empty.
 
 ## Build / Clean / Run
 ```
@@ -41,13 +41,13 @@ dotnet run --project InvoiceDesk
 ## Runtime Behavior
 - Multi-company isolation: services use `ICompanyContext` to scope queries.
 - Invoice issuing is transactional; numbering per company; issued invoices/PDFs are immutable.
-- PDF exports go to `InvoiceDesk/Exports` (relative to workspace) and stored in DB as bytes/metadata.
+- PDF exports go to InvoiceDesk/exports (relative to workspace) and are also stored in DB as bytes/metadata.
 - User culture preference is persisted; UI binds `DataGrid.Language` to the selected culture to avoid validation issues when switching languages.
 
 ## Troubleshooting
 - Missing WebView2: install Evergreen runtime (x64/ARM as appropriate).
-- Binding issues: binding trace is enabled to `logs/app.log`; check for `BindingExpression` entries.
-- MySQL permissions: ensure the configured user can create/alter the database.
+- Binding issues: binding trace is enabled to logs/app.log; check for BindingExpression entries.
+- SQL Server permissions: ensure the configured user can create/alter the database and target catalog exists or is creatable.
 
 ## Notes for Development
 - Logs: `logs/app.log` (file logger + binding trace).

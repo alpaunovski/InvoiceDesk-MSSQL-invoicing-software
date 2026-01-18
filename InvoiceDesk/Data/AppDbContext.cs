@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceDesk.Data;
 
+/// <summary>
+/// EF Core context scoped per company, with snapshot-friendly invoice models.
+/// </summary>
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Company> Companies => Set<Company>();

@@ -16,6 +16,9 @@ using Microsoft.Web.WebView2.Wpf;
 
 namespace InvoiceDesk.Services;
 
+/// <summary>
+/// Generates issued-invoice PDFs using WebView2 and persists the binary to the database for reuse.
+/// </summary>
 public class PdfExportService
 {
     private readonly IDbContextFactory<AppDbContext> _dbFactory;
@@ -31,6 +34,9 @@ public class PdfExportService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Generates (or rehydrates) the PDF for an issued invoice, writing to disk and storing bytes in the DB.
+    /// </summary>
     public async Task<string> ExportPdfAsync(int invoiceId, string? targetPath = null, bool regenerate = false, CancellationToken cancellationToken = default)
     {
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
@@ -88,6 +94,9 @@ public class PdfExportService
         }
     }
 
+    /// <summary>
+    /// Regenerates the issued PDF and stores it; used right after issuing to guarantee a binary copy exists.
+    /// </summary>
     public Task<string> GenerateAndStoreIssuedPdfAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
         return ExportPdfAsync(invoiceId, null, true, cancellationToken);
@@ -109,6 +118,9 @@ public class PdfExportService
         return Path.Combine(workspaceRoot, "exports");
     }
 
+    /// <summary>
+    /// Renders HTML to PDF via a hidden WebView2 control, enforcing timeouts to avoid UI hangs.
+    /// </summary>
     private async Task<byte[]> GeneratePdfBytesAsync(string html, string filePath, CancellationToken cancellationToken)
     {
         var dispatcher = Application.Current.Dispatcher;
@@ -144,7 +156,7 @@ public class PdfExportService
                 throw;
             }
 
-            // Hidden host window to give WebView2 a dispatcher/visual root without flashing UI.
+			// Hidden host window to give WebView2 a dispatcher/visual root without flashing UI.
             var hostWindow = new Window
             {
                 Width = 1,
