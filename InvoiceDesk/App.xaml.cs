@@ -171,6 +171,7 @@ public partial class App : Application
 				options.UseSqlServer(connectionString, sql =>
 				{
 					sql.EnableRetryOnFailure();
+					sql.CommandTimeout(60);
 				});
 				options.EnableDetailedErrors();
 			});
@@ -181,6 +182,7 @@ public partial class App : Application
 			services.AddTransient<InvoiceQueryService>();
 			services.AddTransient<InvoiceService>();
 			services.AddTransient<PdfExportService>();
+			services.AddTransient<PdfSigningService>();
 			services.AddSingleton<InvoiceHtmlRenderer>();
 
 			services.AddTransient<MainViewModel>();

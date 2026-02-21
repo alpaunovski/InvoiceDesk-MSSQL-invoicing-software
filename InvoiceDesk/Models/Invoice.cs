@@ -29,6 +29,11 @@ public class Invoice
     public string? IssuedPdfSha256 { get; set; }
     public DateTime? IssuedPdfCreatedAtUtc { get; set; }
 
+    public byte[]? SignedPdf { get; set; }
+    public string? SignedPdfFileName { get; set; }
+    public string? SignedPdfSha256 { get; set; }
+    public DateTime? SignedPdfCreatedAtUtc { get; set; }
+
     public Company? Company { get; set; }
     public Customer? Customer { get; set; }
     public ICollection<InvoiceLine> Lines { get; set; } = new List<InvoiceLine>();

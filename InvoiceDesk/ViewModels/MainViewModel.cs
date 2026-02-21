@@ -24,6 +24,7 @@ public partial class MainViewModel : ObservableObject
     private readonly InvoiceQueryService _invoiceQueryService;
     private readonly InvoiceService _invoiceService;
     private readonly PdfExportService _pdfExportService;
+    private readonly PdfSigningService _pdfSigningService;
     private readonly ILanguageService _languageService;
     private readonly ICompanyContext _companyContext;
     private readonly UserSettingsService _settingsService;
@@ -107,6 +108,7 @@ public partial class MainViewModel : ObservableObject
         InvoiceQueryService invoiceQueryService,
         InvoiceService invoiceService,
         PdfExportService pdfExportService,
+        PdfSigningService pdfSigningService,
         CurrencyDisplayOptions currencyOptions,
         ILanguageService languageService,
         ICompanyContext companyContext,
@@ -118,6 +120,7 @@ public partial class MainViewModel : ObservableObject
         _invoiceQueryService = invoiceQueryService;
         _invoiceService = invoiceService;
         _pdfExportService = pdfExportService;
+        _pdfSigningService = pdfSigningService;
         _currencyOptions = currencyOptions;
         _languageService = languageService;
         _companyContext = companyContext;
@@ -401,6 +404,35 @@ public partial class MainViewModel : ObservableObject
             _logger.LogError(ex, "PDF export failed for invoice {InvoiceId}", SelectedInvoice.Id);
             StatusMessage = $"PDF export failed: {ex.Message}";
             MessageBox.Show(StatusMessage, Strings.ExportPdf, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    [RelayCommand]
+    private async Task SignPdfAsync()
+    {
+        if (SelectedInvoice == null || !SelectedInvoice.IsIssued)
+        {
+            StatusMessage = Strings.MessagePdfIssuedOnly;
+            MessageBox.Show(StatusMessage, Strings.SignPdf, MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        try
+        {
+            StatusMessage = Strings.MessageSigningPdf;
+            var path = await _pdfSigningService.SignIssuedPdfAsync(SelectedInvoice.Id);
+            StatusMessage = string.Format(Strings.MessagePdfSigned, path);
+            MessageBox.Show(StatusMessage, Strings.SignPdf, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (OperationCanceledException)
+        {
+            StatusMessage = Strings.MessageSigningPdfCancelled;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "PDF signing failed for invoice {InvoiceId}", SelectedInvoice?.Id);
+            StatusMessage = string.Format(Strings.MessagePdfSignFailed, ex.Message);
+            MessageBox.Show(StatusMessage, Strings.SignPdf, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

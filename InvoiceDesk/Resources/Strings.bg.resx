@@ -240,6 +240,21 @@
   <data name="MessagePdfExported" xml:space="preserve">
       <value>PDF е генериран в {0} (папка: Exports).</value>
   </data>
+  <data name="SignPdf" xml:space="preserve">
+    <value>Подпиши PDF (КЕП/КУЕ)</value>
+  </data>
+  <data name="MessageSigningPdf" xml:space="preserve">
+    <value>Подписване на PDF...</value>
+  </data>
+  <data name="MessageSigningPdfCancelled" xml:space="preserve">
+    <value>Подписването е отказано.</value>
+  </data>
+  <data name="MessagePdfSigned" xml:space="preserve">
+    <value>Подписан PDF е записан в {0}</value>
+  </data>
+  <data name="MessagePdfSignFailed" xml:space="preserve">
+    <value>Подписването на PDF се провали: {0}</value>
+  </data>
   <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
     <value>Действието е необратимо. Да изтрия ли фактурата?</value>
   </data>

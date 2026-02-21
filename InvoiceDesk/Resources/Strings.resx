@@ -240,6 +240,21 @@
   <data name="MessagePdfExported" xml:space="preserve">
     <value>PDF exported to {0} (folder: Exports)</value>
   </data>
+  <data name="SignPdf" xml:space="preserve">
+    <value>Sign PDF (KEP/QES)</value>
+  </data>
+  <data name="MessageSigningPdf" xml:space="preserve">
+    <value>Signing PDF...</value>
+  </data>
+  <data name="MessageSigningPdfCancelled" xml:space="preserve">
+    <value>Signing cancelled.</value>
+  </data>
+  <data name="MessagePdfSigned" xml:space="preserve">
+    <value>Signed PDF saved to {0}</value>
+  </data>
+  <data name="MessagePdfSignFailed" xml:space="preserve">
+    <value>PDF signing failed: {0}</value>
+  </data>
   <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
     <value>This action cannot be undone. Delete the invoice?</value>
   </data>

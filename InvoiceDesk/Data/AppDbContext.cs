@@ -71,6 +71,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         entity.Property(e => e.Notes).HasMaxLength(1000);
         entity.Property(e => e.IssuedPdfFileName).HasMaxLength(255);
         entity.Property(e => e.IssuedPdfSha256).HasMaxLength(64);
+        entity.Property(e => e.SignedPdfFileName).HasMaxLength(255);
+        entity.Property(e => e.SignedPdfSha256).HasMaxLength(64);
 
         entity.Property(e => e.SubTotal).HasPrecision(18, 2);
         entity.Property(e => e.TaxTotal).HasPrecision(18, 2);
