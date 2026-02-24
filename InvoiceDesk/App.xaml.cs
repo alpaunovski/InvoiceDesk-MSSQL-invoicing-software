@@ -183,6 +183,7 @@ public partial class App : Application
 			services.AddTransient<InvoiceService>();
 			services.AddTransient<PdfExportService>();
 			services.AddTransient<PdfSigningService>();
+			services.AddTransient<DatabaseBackupService>();
 			services.AddSingleton<InvoiceHtmlRenderer>();
 
 			services.AddTransient<MainViewModel>();

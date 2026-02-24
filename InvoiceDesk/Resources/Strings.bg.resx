@@ -255,6 +255,39 @@
   <data name="MessagePdfSignFailed" xml:space="preserve">
     <value>Подписването на PDF се провали: {0}</value>
   </data>
+  <data name="BackupDatabase" xml:space="preserve">
+    <value>Архив на БД</value>
+  </data>
+  <data name="RestoreDatabase" xml:space="preserve">
+    <value>Възстанови БД</value>
+  </data>
+  <data name="MessageBackupRunning" xml:space="preserve">
+    <value>Архивиране на базата данни...</value>
+  </data>
+  <data name="MessageBackupSuccess" xml:space="preserve">
+    <value>Архивът е записан в {0}</value>
+  </data>
+  <data name="MessageBackupFailed" xml:space="preserve">
+    <value>Неуспешно архивиране на базата: {0}</value>
+  </data>
+  <data name="MessageBackupCancelled" xml:space="preserve">
+    <value>Архивирането е отменено.</value>
+  </data>
+  <data name="MessageRestoreRunning" xml:space="preserve">
+    <value>Възстановяване на базата данни...</value>
+  </data>
+  <data name="MessageRestoreSuccess" xml:space="preserve">
+    <value>Базата е възстановена от {0}</value>
+  </data>
+  <data name="MessageRestoreFailed" xml:space="preserve">
+    <value>Неуспешно възстановяване на базата: {0}</value>
+  </data>
+  <data name="MessageRestoreCancelled" xml:space="preserve">
+    <value>Възстановяването е отменено.</value>
+  </data>
+  <data name="MessageNoBackupFound" xml:space="preserve">
+    <value>Няма архиви в {0}</value>
+  </data>
   <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
     <value>Действието е необратимо. Да изтрия ли фактурата?</value>
   </data>

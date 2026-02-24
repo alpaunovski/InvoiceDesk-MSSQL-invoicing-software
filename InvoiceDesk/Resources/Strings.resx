@@ -255,6 +255,39 @@
   <data name="MessagePdfSignFailed" xml:space="preserve">
     <value>PDF signing failed: {0}</value>
   </data>
+  <data name="BackupDatabase" xml:space="preserve">
+    <value>Backup DB</value>
+  </data>
+  <data name="RestoreDatabase" xml:space="preserve">
+    <value>Restore DB</value>
+  </data>
+  <data name="MessageBackupRunning" xml:space="preserve">
+    <value>Backing up database...</value>
+  </data>
+  <data name="MessageBackupSuccess" xml:space="preserve">
+    <value>Backup saved to {0}</value>
+  </data>
+  <data name="MessageBackupFailed" xml:space="preserve">
+    <value>Database backup failed: {0}</value>
+  </data>
+  <data name="MessageBackupCancelled" xml:space="preserve">
+    <value>Database backup cancelled.</value>
+  </data>
+  <data name="MessageRestoreRunning" xml:space="preserve">
+    <value>Restoring database...</value>
+  </data>
+  <data name="MessageRestoreSuccess" xml:space="preserve">
+    <value>Database restored from {0}</value>
+  </data>
+  <data name="MessageRestoreFailed" xml:space="preserve">
+    <value>Database restore failed: {0}</value>
+  </data>
+  <data name="MessageRestoreCancelled" xml:space="preserve">
+    <value>Database restore cancelled.</value>
+  </data>
+  <data name="MessageNoBackupFound" xml:space="preserve">
+    <value>No backup zip found in {0}</value>
+  </data>
   <data name="MessageInvoiceDeleteConfirm" xml:space="preserve">
     <value>This action cannot be undone. Delete the invoice?</value>
   </data>

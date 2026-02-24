@@ -92,6 +92,17 @@ public static class Strings
         public static string MessageSigningPdfCancelled => Get();
         public static string MessagePdfSigned => Get();
         public static string MessagePdfSignFailed => Get();
+        public static string BackupDatabase => Get();
+        public static string RestoreDatabase => Get();
+        public static string MessageBackupRunning => Get();
+        public static string MessageBackupSuccess => Get();
+        public static string MessageBackupFailed => Get();
+        public static string MessageBackupCancelled => Get();
+        public static string MessageRestoreRunning => Get();
+        public static string MessageRestoreSuccess => Get();
+        public static string MessageRestoreFailed => Get();
+        public static string MessageRestoreCancelled => Get();
+        public static string MessageNoBackupFound => Get();
     public static string MessageInvoiceDeleteConfirm => Get();
     public static string MessageInvoiceDeleted => Get();
     public static string MessageInvoiceDeleteFailed => Get();

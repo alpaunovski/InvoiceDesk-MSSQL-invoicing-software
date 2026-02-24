@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +26,7 @@ public partial class MainViewModel : ObservableObject
     private readonly InvoiceService _invoiceService;
     private readonly PdfExportService _pdfExportService;
     private readonly PdfSigningService _pdfSigningService;
+    private readonly DatabaseBackupService _backupService;
     private readonly ILanguageService _languageService;
     private readonly ICompanyContext _companyContext;
     private readonly UserSettingsService _settingsService;
@@ -72,6 +74,12 @@ public partial class MainViewModel : ObservableObject
     private string statusMessage = string.Empty;
 
     [ObservableProperty]
+    private bool isBusy;
+
+    [ObservableProperty]
+    private string busyMessage = string.Empty;
+
+    [ObservableProperty]
     private ObservableCollection<VatTypeOption> vatTypes = new();
 
     public XmlLanguage UiLanguage => XmlLanguage.GetLanguage(_languageService.CurrentCulture.IetfLanguageTag);
@@ -109,6 +117,7 @@ public partial class MainViewModel : ObservableObject
         InvoiceService invoiceService,
         PdfExportService pdfExportService,
         PdfSigningService pdfSigningService,
+        DatabaseBackupService backupService,
         CurrencyDisplayOptions currencyOptions,
         ILanguageService languageService,
         ICompanyContext companyContext,
@@ -121,6 +130,7 @@ public partial class MainViewModel : ObservableObject
         _invoiceService = invoiceService;
         _pdfExportService = pdfExportService;
         _pdfSigningService = pdfSigningService;
+        _backupService = backupService;
         _currencyOptions = currencyOptions;
         _languageService = languageService;
         _companyContext = companyContext;
@@ -437,6 +447,78 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task BackupDatabaseAsync()
+    {
+        try
+        {
+            var defaultDir = _backupService.GetDefaultBackupDirectory();
+            Directory.CreateDirectory(defaultDir);
+            var fileName = Path.Combine(defaultDir, $"InvoiceDesk-backup-{DateTime.Now:yyyyMMdd-HHmmss}.zip");
+
+            IsBusy = true;
+            BusyMessage = Strings.MessageBackupRunning;
+            var path = await _backupService.BackupToZipAsync(fileName);
+            StatusMessage = string.Format(Strings.MessageBackupSuccess, path);
+            MessageBox.Show(StatusMessage, Strings.BackupDatabase, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Database backup failed");
+            StatusMessage = string.Format(Strings.MessageBackupFailed, ex.Message);
+            MessageBox.Show(StatusMessage, Strings.BackupDatabase, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+            BusyMessage = string.Empty;
+        }
+    }
+
+    [RelayCommand]
+    private async Task RestoreDatabaseAsync()
+    {
+        try
+        {
+            var defaultDir = _backupService.GetDefaultBackupDirectory();
+            if (!Directory.Exists(defaultDir))
+            {
+                StatusMessage = string.Format(Strings.MessageNoBackupFound, defaultDir);
+                MessageBox.Show(StatusMessage, Strings.RestoreDatabase, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var latest = Directory.GetFiles(defaultDir, "*.zip", SearchOption.TopDirectoryOnly)
+                .OrderByDescending(File.GetLastWriteTimeUtc)
+                .FirstOrDefault();
+
+            if (latest == null)
+            {
+                StatusMessage = string.Format(Strings.MessageNoBackupFound, defaultDir);
+                MessageBox.Show(StatusMessage, Strings.RestoreDatabase, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            IsBusy = true;
+            BusyMessage = Strings.MessageRestoreRunning;
+            await _backupService.RestoreFromZipAsync(latest);
+            await ReloadDataAfterRestoreAsync();
+            StatusMessage = string.Format(Strings.MessageRestoreSuccess, latest);
+            MessageBox.Show(StatusMessage, Strings.RestoreDatabase, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Database restore failed");
+            StatusMessage = string.Format(Strings.MessageRestoreFailed, ex.Message);
+            MessageBox.Show(StatusMessage, Strings.RestoreDatabase, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+            BusyMessage = string.Empty;
+        }
+    }
+
+    [RelayCommand]
     private void AddLine()
     {
         if (SelectedInvoice == null)
@@ -514,6 +596,27 @@ public partial class MainViewModel : ObservableObject
         var list = await _customerService.GetCustomersAsync();
         Customers = new ObservableCollection<Customer>(list);
         SelectedCustomerForDraft = Customers.FirstOrDefault();
+    }
+
+    private async Task ReloadDataAfterRestoreAsync()
+    {
+        var allCompanies = await _companyService.GetCompaniesAsync();
+        Companies = new ObservableCollection<Company>(allCompanies);
+        SelectedCompany = Companies.FirstOrDefault();
+
+        if (SelectedCompany == null)
+        {
+            Customers.Clear();
+            Invoices.Clear();
+            SelectedInvoice = null;
+            SelectedInvoiceSummary = null;
+        }
+        else
+        {
+            await _companyContext.SetCompanyAsync(SelectedCompany.Id);
+            await LoadCustomersAsync();
+            await LoadInvoicesAsync();
+        }
     }
 
     private void RefreshVatTypes()
