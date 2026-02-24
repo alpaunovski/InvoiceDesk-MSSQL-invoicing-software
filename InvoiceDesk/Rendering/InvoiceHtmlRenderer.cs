@@ -37,8 +37,8 @@ public class InvoiceHtmlRenderer
             var sb = new StringBuilder();
             sb.Append("<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>");
             sb.Append("<style>");
-            sb.Append("@page { size: A4; margin: 20mm; } body { font-family: 'Segoe UI', sans-serif; -webkit-print-color-adjust: exact; } ");
-            sb.Append("h1,h2,h3,h4 { margin: 0; } .header, .footer { position: fixed; left: 0; right: 0; } .header { top: 0; } .footer { bottom: 0; font-size: 12px; } ");
+            sb.Append("@page { size: A4; margin: 20mm; } body { font-family: 'Segoe UI', sans-serif; -webkit-print-color-adjust: exact; padding-top: 140px; } ");
+            sb.Append("h1,h2,h3,h4 { margin: 0; } .header, .footer { position: fixed; left: 0; right: 0; } .header { top: 0; height: 120px; } .footer { bottom: 0; font-size: 12px; } ");
             sb.Append("table { width: 100%; border-collapse: collapse; margin-top: 12px; } th, td { border: 1px solid #444; padding: 6px; font-size: 12px; } ");
             sb.Append("thead { display: table-header-group; } tfoot { display: table-footer-group; } tr { page-break-inside: avoid; } ");
             sb.Append(".totals { margin-top: 16px; width: 40%; float: right; page-break-inside: avoid; } .totals td { border: none; } .totals tr td.label { text-align: right; font-weight: 600; } ");

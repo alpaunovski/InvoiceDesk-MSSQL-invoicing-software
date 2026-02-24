@@ -88,7 +88,6 @@ public class PdfSigningService
         using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
         store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
 
-        // Filter for certificates capable of digital signatures; smart card/KSP backed keys are supported.
         var candidates = new X509Certificate2Collection();
         foreach (var cert in store.Certificates)
         {
@@ -97,9 +96,43 @@ public class PdfSigningService
                 continue;
             }
 
+            if (cert.NotBefore > DateTime.UtcNow || cert.NotAfter < DateTime.UtcNow)
+            {
+                continue;
+            }
+
             var keyUsage = cert.Extensions.OfType<X509KeyUsageExtension>().FirstOrDefault();
             var hasDigitalSignature = keyUsage == null || (keyUsage.KeyUsages & (X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.NonRepudiation)) != 0;
             if (!hasDigitalSignature)
+            {
+                continue;
+            }
+
+            var eku = cert.Extensions.OfType<X509EnhancedKeyUsageExtension>().FirstOrDefault();
+            if (eku != null)
+            {
+                var hasDocSignEku = eku.EnhancedKeyUsages.Cast<Oid>().Any(oid => oid.Value is "1.3.6.1.5.5.7.3.3" or "1.3.6.1.4.1.311.10.3.12");
+                if (!hasDocSignEku)
+                {
+                    continue;
+                }
+            }
+
+            if (cert.Subject == cert.Issuer)
+            {
+                continue;
+            }
+
+            using var chain = new X509Chain
+            {
+                ChainPolicy =
+                {
+                    RevocationMode = X509RevocationMode.Online,
+                    VerificationFlags = X509VerificationFlags.NoFlag
+                }
+            };
+
+            if (!chain.Build(cert))
             {
                 continue;
             }
