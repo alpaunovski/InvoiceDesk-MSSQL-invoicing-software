@@ -15,27 +15,36 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
     <DockPanel>
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="12" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[CompanyLabel]}" VerticalAlignment="Center" />
-            <ComboBox Width="200" Margin="6 0 0 0" ItemsSource="{Binding Companies}" SelectedItem="{Binding SelectedCompany}" DisplayMemberPath="Name" />
+        <Grid DockPanel.Dock="Top" Margin="12" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[LanguageLabel]}" VerticalAlignment="Center" Margin="12 0 0 0" />
-            <ComboBox Width="150" Margin="6 0 0 0" ItemsSource="{Binding Cultures}" SelectedValuePath="Code" DisplayMemberPath="Label" SelectedValue="{Binding SelectedCulture}" />
+            <WrapPanel Grid.Column="0" VerticalAlignment="Center" ItemHeight="32" ItemWidth="Auto">
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[CompanyLabel]}" VerticalAlignment="Center" Margin="0 0 6 6" />
+                <ComboBox Width="200" Margin="0 0 12 6" ItemsSource="{Binding Companies}" SelectedItem="{Binding SelectedCompany}" DisplayMemberPath="Name" />
 
-            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Customer]}" VerticalAlignment="Center" Margin="12 0 0 0" />
-            <ComboBox Width="180" Margin="6 0 0 0" ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomerForDraft}" DisplayMemberPath="Name" />
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[LanguageLabel]}" VerticalAlignment="Center" Margin="0 0 6 6" />
+                <ComboBox Width="150" Margin="0 0 12 6" ItemsSource="{Binding Cultures}" SelectedValuePath="Code" DisplayMemberPath="Label" SelectedValue="{Binding SelectedCulture}" />
 
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[NewDraft]}" Command="{Binding NewDraftCommand}" Margin="12 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[Save]}" Command="{Binding SaveCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[Issue]}" Command="{Binding IssueCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[DeleteInvoice]}" Command="{Binding DeleteInvoiceCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[ExportPdf]}" Command="{Binding ExportPdfCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[SignPdf]}" Command="{Binding SignPdfCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[BackupDatabase]}" Command="{Binding BackupDatabaseCommand}" Margin="12 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[RestoreDatabase]}" Command="{Binding RestoreDatabaseCommand}" Margin="6 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[ManageCompanies]}" Click="OpenCompanies" Margin="12 0 0 0" />
-            <Button Content="{Binding Source={StaticResource Loc}, Path=[ManageCustomers]}" Click="OpenCustomers" Margin="6 0 0 0" />
-        </StackPanel>
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Customer]}" VerticalAlignment="Center" Margin="0 0 6 6" />
+                <ComboBox Width="180" Margin="0 0 12 6" ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomerForDraft}" DisplayMemberPath="Name" />
+            </WrapPanel>
+
+            <WrapPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" ItemHeight="32" ItemWidth="Auto">
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[NewDraft]}" Command="{Binding NewDraftCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[Save]}" Command="{Binding SaveCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[Issue]}" Command="{Binding IssueCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[DeleteInvoice]}" Command="{Binding DeleteInvoiceCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[ExportPdf]}" Command="{Binding ExportPdfCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[SignPdf]}" Command="{Binding SignPdfCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[BackupDatabase]}" Command="{Binding BackupDatabaseCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[RestoreDatabase]}" Command="{Binding RestoreDatabaseCommand}" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[ManageCompanies]}" Click="OpenCompanies" Margin="0 0 6 6" />
+                <Button Content="{Binding Source={StaticResource Loc}, Path=[ManageCustomers]}" Click="OpenCustomers" Margin="0 0 6 6" />
+            </WrapPanel>
+        </Grid>
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem Content="{Binding StatusMessage}" />
