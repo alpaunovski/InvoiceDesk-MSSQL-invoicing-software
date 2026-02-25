@@ -4,12 +4,20 @@
 InvoiceDesk is a .NET 8 WPF desktop app for multi-company invoice management with EF Core (SQL Server), MVVM, RESX localization (English/Bulgarian), and WebView2-based PDF export.
 
 ## Architecture
-- Pattern: MVVM with CommunityToolkit.Mvvm.
-- Data: SQL Server via AppDbContext; migrations under Migrations; AppDbInitializer ensures database exists and seeds defaults.
-- Services: business logic and orchestration under Services; queries scoped by ICompanyContext to enforce tenant isolation.
-- Rendering: HTML-to-PDF templating in Rendering/InvoiceHtmlRenderer.cs.
-- UI: WPF windows and views under Views, driven by ViewModels.
-- Helpers: Localization and utilities under Helpers; resources in Resources.
+- Pattern: MVVM with CommunityToolkit.Mvvm; async commands and observable properties drive bindings.
+- Data: SQL Server via AppDbContext/IDbContextFactory; migrations under Migrations; AppDbInitializer ensures database exists, applies migrations, backfills missing invoice numbers, seeds a default company.
+- Services: business logic/orchestration under Services; ICompanyContext scopes queries per company for multi-tenant isolation.
+- Rendering: HTML-to-PDF templating in Rendering/InvoiceHtmlRenderer.cs; WebView2 prints to PDF with deterministic formatting and dual-currency notes when enabled.
+- UI: WPF windows/views under Views driven by ViewModels; culture changes propagate through LocalizedStrings helper and binding language updates.
+- Helpers: Localization, currency dual-display, hashing, logging, VAT options under Helpers; resources in Resources.
+
+## Key Services
+- InvoiceService: draft creation/editing, issuing (transactional number allocation), totals calculation, immutability of issued invoices.
+- PdfExportService: orchestrates WebView2 host, renders HTML, writes PDFs to disk and stores issued PDFs plus hashes in the database.
+- PdfSigningService: applies KEP/QES signatures using certificates from the Windows store (smart cards/tokens); stores signed bytes + SHA-256.
+- DatabaseBackupService: creates and restores compressed .bak files inside .zip archives; validates headers and uses compression when supported.
+- InvoiceQueryService: filtering/searching invoices with company scoping.
+- UserSettingsService/LanguageService: persists user-selected culture and preferences.
 
 ## Configuration
 Primary settings live in appsettings.json:
@@ -47,7 +55,7 @@ Business rules live primarily in Services/InvoiceService.cs (draft creation, iss
 ## PDF Export
 - HTML-to-PDF via WebView2.
 - Template rendering in Rendering/InvoiceHtmlRenderer.cs.
-- Export pipeline and file output in Services/PdfExportService.cs; default output directory is exports, and issued PDFs are cached in the database with hashes/timestamps.
+- Export pipeline and file output in Services/PdfExportService.cs; default output directory is exports, and issued PDFs are cached in the database with hashes/timestamps; PdfSigningService adds optional KEP/QES signatures.
 
 ## Logging
 - File logger writing to logs/app.log (Helpers/FileLogger.cs), plus binding trace wiring in App.xaml.cs.

@@ -12,6 +12,13 @@ Course project; not production-hardened. No warranty. Educational use only.
 - WebView2 for HTML→PDF (PrintToPdfAsync)
 - RESX localization: Strings.resx (en) and Strings.bg.resx (bg); SatelliteResourceLanguages limited to en;bg
 
+## Architecture Highlights
+- Layered WPF client: Views + ViewModels (async commands) over services; `ICompanyContext` scopes queries per company.
+- Data access via `AppDbContext`/`IDbContextFactory`; `AppDbInitializer` ensures DB exists, applies migrations, backfills missing invoice numbers, seeds a default company.
+- Business logic in Services: `InvoiceService` (draft→issue, totals, immutability), `PdfExportService` (WebView2 export), `PdfSigningService` (KEP/QES signing), `DatabaseBackupService` (compressed .bak to .zip), `InvoiceQueryService` (filters/search).
+- Rendering: `InvoiceHtmlRenderer` builds deterministic HTML; WebView2 prints to PDF; issued PDFs are stored on disk and in DB with SHA-256 metadata.
+- Helpers: currency dual-display (BGN/EUR), localized strings/converters, file logging with safe append.
+
 ## Prerequisites
 - .NET 8 SDK
 - SQL Server instance reachable with create/alter rights (LocalDB/Express/remote ok)

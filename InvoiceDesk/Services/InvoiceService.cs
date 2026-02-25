@@ -115,6 +115,7 @@ public class InvoiceService
     public async Task<Invoice> IssueInvoiceAsync(int invoiceId, CancellationToken cancellationToken = default)
     {
         await using var strategyDb = await _dbFactory.CreateDbContextAsync(cancellationToken);
+        // Execution strategy retries transient SQL errors during issuance (e.g., deadlocks/timeouts).
         var strategy = strategyDb.Database.CreateExecutionStrategy();
 
         var issuedInvoice = await strategy.ExecuteAsync(async () =>

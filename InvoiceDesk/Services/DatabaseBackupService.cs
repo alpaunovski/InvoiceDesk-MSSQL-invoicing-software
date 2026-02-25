@@ -93,6 +93,7 @@ public class DatabaseBackupService
         await connection.OpenAsync(cancellationToken);
 
         var supportsCompression = await SupportsBackupCompressionAsync(connection, cancellationToken);
+        // Use compression when supported to shrink backups and speed up downloads.
         var compressionClause = supportsCompression ? ", COMPRESSION" : string.Empty;
         var commandText = $"BACKUP DATABASE [{databaseName}] TO DISK=@path WITH INIT, COPY_ONLY, FORMAT{compressionClause}";
         await ExecuteNonQueryAsync(connection, commandText, backupPath, cancellationToken);
@@ -103,6 +104,7 @@ public class DatabaseBackupService
         await using var connection = new SqlConnection(BuildMasterConnectionString());
         await connection.OpenAsync(cancellationToken);
 
+        // Require exclusive access so the restore does not compete with active connections.
         await EnsureBackupValidAsync(connection, backupPath, databaseName, cancellationToken);
 
         var setSingleUser = $"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
@@ -161,6 +163,7 @@ public class DatabaseBackupService
             throw new InvalidOperationException($"Backup file {backupPath} is missing or too small.");
         }
 
+        // Inspect backup header to ensure we are restoring the intended database and that the file is readable.
         await using (var headerCmd = connection.CreateCommand())
         {
             headerCmd.CommandText = "RESTORE HEADERONLY FROM DISK=@path";

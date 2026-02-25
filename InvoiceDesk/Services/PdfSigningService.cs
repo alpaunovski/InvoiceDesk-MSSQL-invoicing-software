@@ -66,6 +66,7 @@ public class PdfSigningService
         await Task.Run(() => SignPdf(unsignedPath, signedPath, certificate, invoice), cancellationToken);
 
         var bytes = await File.ReadAllBytesAsync(signedPath, cancellationToken);
+        // Persist signed payload and checksum so we can later prove integrity.
         invoice.SignedPdf = bytes;
         invoice.SignedPdfFileName = Path.GetFileName(signedPath);
         invoice.SignedPdfSha256 = HashHelper.ComputeSha256(bytes);
@@ -89,6 +90,7 @@ public class PdfSigningService
         store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
 
         var candidates = new X509Certificate2Collection();
+        // Allow only valid, time-current certificates capable of document signing with a private key.
         foreach (var cert in store.Certificates)
         {
             if (!cert.HasPrivateKey)
@@ -154,6 +156,7 @@ public class PdfSigningService
         _logger.LogInformation("Signing PDF {Source} to {Target} with {Subject}", sourcePath, targetPath, certificate.Subject);
         using var reader = new PdfReader(sourcePath);
         using var output = new FileStream(targetPath, FileMode.Create, FileAccess.ReadWrite);
+        // Append-only stamping preserves the original content for audit trails.
         var signer = new PdfSigner(reader, output, new StampingProperties().UseAppendMode());
 
         signer.SetFieldName($"Sig{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}");
