@@ -109,6 +109,7 @@ public class CustomerService
             return;
         }
 
+        // Attempt VIES validation; success updates VAT registration flag and may enrich missing address data.
         var result = await _viesClient.CheckVatAsync(customer.CountryCode, customer.VatNumber, cancellationToken);
         if (result.Success)
         {

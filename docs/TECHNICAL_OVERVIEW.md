@@ -6,7 +6,7 @@ InvoiceDesk is a .NET 8 WPF desktop app for multi-company invoice management wit
 ## Architecture
 - Pattern: MVVM with CommunityToolkit.Mvvm; async commands and observable properties drive bindings.
 - Data: SQL Server via AppDbContext/IDbContextFactory; migrations under Migrations; AppDbInitializer ensures database exists, applies migrations, backfills missing invoice numbers, seeds a default company.
-- Services: business logic/orchestration under Services; ICompanyContext scopes queries per company for multi-tenant isolation.
+- Services: business logic/orchestration under Services; ICompanyContext scopes queries per company for multi-tenant isolation; VIES VAT validation is invoked when saving customers for supported EU countries.
 - Rendering: HTML-to-PDF templating in Rendering/InvoiceHtmlRenderer.cs; WebView2 prints to PDF with deterministic formatting and dual-currency notes when enabled.
 - UI: WPF windows/views under Views driven by ViewModels; culture changes propagate through LocalizedStrings helper and binding language updates.
 - Helpers: Localization, currency dual-display, hashing, logging, VAT options under Helpers; resources in Resources.
@@ -17,6 +17,7 @@ InvoiceDesk is a .NET 8 WPF desktop app for multi-company invoice management wit
 - PdfSigningService: applies KEP/QES signatures using certificates from the Windows store (smart cards/tokens); stores signed bytes + SHA-256.
 - DatabaseBackupService: creates and restores compressed .bak files inside .zip archives; validates headers and uses compression when supported.
 - InvoiceQueryService: filtering/searching invoices with company scoping.
+- ViesClient/CustomerService: automatic EU VAT number validation against the VIES SOAP API; updates customer IsVatRegistered and backfills address when the service returns data.
 - UserSettingsService/LanguageService: persists user-selected culture and preferences.
 
 ## Configuration

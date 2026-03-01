@@ -13,8 +13,10 @@ namespace InvoiceDesk.Services;
 
 public class ViesClient : IViesClient
 {
+    // Official EU VIES SOAP endpoint for VAT validation.
     private static readonly Uri ServiceUri = new("https://ec.europa.eu/taxation_customs/vies/services/checkVatService");
 
+    // Explicit allowlist to avoid sending requests for unsupported member states or non-EU countries.
     private static readonly HashSet<string> SupportedCountries = new(StringComparer.OrdinalIgnoreCase)
     {
         "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "XI"
@@ -63,6 +65,7 @@ public class ViesClient : IViesClient
 
         try
         {
+            // Send SOAP request and parse either the success payload or SOAP fault into a uniform result.
             using var response = await _httpClient.SendAsync(request, cancellationToken);
             var content = await response.Content.ReadAsStringAsync();
             var parsed = ParseResponse(content);
@@ -167,6 +170,7 @@ public class ViesClient : IViesClient
             return string.Empty;
         }
 
+        // VIES addresses come as multi-line strings; normalize to a single comma-separated line for UI storage.
         var parts = address
             .Replace("\r", string.Empty)
             .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

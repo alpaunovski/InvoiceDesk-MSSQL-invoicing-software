@@ -18,6 +18,7 @@ Course project; not production-hardened. No warranty. Educational use only.
 - Business logic in Services: `InvoiceService` (draft→issue, totals, immutability), `PdfExportService` (WebView2 export), `PdfSigningService` (KEP/QES signing), `DatabaseBackupService` (compressed .bak to .zip), `InvoiceQueryService` (filters/search).
 - Rendering: `InvoiceHtmlRenderer` builds deterministic HTML; WebView2 prints to PDF; issued PDFs are stored on disk and in DB with SHA-256 metadata.
 - Helpers: currency dual-display (BGN/EUR), localized strings/converters, file logging with safe append.
+- VAT validation: VIES checks run automatically on customer save for supported EU country codes; `IsVatRegistered` and address are updated when data is returned.
 
 ## Prerequisites
 - .NET 8 SDK
@@ -68,3 +69,4 @@ dotnet run --project InvoiceDesk
 - Company and customer management windows
 - Per-line VAT type selection (domestic, intra-EU reverse charge, export, exempt)
 - Runtime culture switching with persisted preference
+- Automatic VIES VAT validation on customer save (EU member states and XI only)
