@@ -165,6 +165,10 @@ public partial class App : Application
 			services.AddSingleton<UserSettingsService>();
 			services.AddSingleton<ILanguageService, LanguageService>();
 			services.AddSingleton<ICompanyContext, CompanyContext>();
+			services.AddHttpClient<IViesClient, ViesClient>(client =>
+			{
+				client.Timeout = TimeSpan.FromSeconds(20);
+			});
 
 			services.AddDbContextFactory<AppDbContext>(options =>
 			{

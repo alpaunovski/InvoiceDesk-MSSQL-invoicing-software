@@ -2,6 +2,8 @@ using InvoiceDesk.Data;
 using InvoiceDesk.Models;
 using InvoiceDesk.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace InvoiceDesk.Services;
 
@@ -9,11 +11,15 @@ public class CustomerService
 {
     private readonly IDbContextFactory<AppDbContext> _dbFactory;
     private readonly ICompanyContext _companyContext;
+    private readonly IViesClient _viesClient;
+    private readonly ILogger<CustomerService> _logger;
 
-    public CustomerService(IDbContextFactory<AppDbContext> dbFactory, ICompanyContext companyContext)
+    public CustomerService(IDbContextFactory<AppDbContext> dbFactory, ICompanyContext companyContext, IViesClient viesClient, ILogger<CustomerService> logger)
     {
         _dbFactory = dbFactory;
         _companyContext = companyContext;
+        _viesClient = viesClient;
+        _logger = logger;
     }
 
     public async Task<List<Customer>> GetCustomersAsync(string? search = null, CancellationToken cancellationToken = default)
@@ -40,6 +46,10 @@ public class CustomerService
     public async Task<Customer> SaveAsync(Customer customer, CancellationToken cancellationToken = default)
     {
         customer.CompanyId = _companyContext.CurrentCompanyId;
+        NormalizeCustomerTaxData(customer);
+
+        await TryAutoCheckVatAsync(customer, cancellationToken);
+
         await using var db = await _dbFactory.CreateDbContextAsync(cancellationToken);
         if (customer.Id == 0)
         {
@@ -79,5 +89,60 @@ public class CustomerService
         {
             throw new InvalidOperationException(Strings.MessageCustomerDeleteFailed, ex);
         }
+    }
+
+    private static void NormalizeCustomerTaxData(Customer customer)
+    {
+        customer.CountryCode = NormalizeCountryCode(customer.CountryCode);
+        customer.VatNumber = NormalizeVatNumber(customer.VatNumber, customer.CountryCode);
+    }
+
+    private async Task TryAutoCheckVatAsync(Customer customer, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(customer.VatNumber) || string.IsNullOrWhiteSpace(customer.CountryCode))
+        {
+            return;
+        }
+
+        if (!_viesClient.IsSupportedCountry(customer.CountryCode))
+        {
+            return;
+        }
+
+        var result = await _viesClient.CheckVatAsync(customer.CountryCode, customer.VatNumber, cancellationToken);
+        if (result.Success)
+        {
+            customer.IsVatRegistered = result.IsValid;
+
+            if (string.IsNullOrWhiteSpace(customer.Address) && !string.IsNullOrWhiteSpace(result.TraderAddress))
+            {
+                customer.Address = result.TraderAddress;
+            }
+        }
+        else
+        {
+            _logger.LogWarning("VIES check failed for {CountryCode}{VatNumber}: {FaultCode} {FaultMessage}", customer.CountryCode, customer.VatNumber, result.FaultCode, result.FaultMessage);
+        }
+    }
+
+    private static string NormalizeCountryCode(string? countryCode)
+    {
+        return countryCode?.Trim().ToUpperInvariant() ?? string.Empty;
+    }
+
+    private static string NormalizeVatNumber(string? vatNumber, string countryCode)
+    {
+        if (string.IsNullOrWhiteSpace(vatNumber))
+        {
+            return string.Empty;
+        }
+
+        var cleaned = new string(vatNumber.Where(char.IsLetterOrDigit).ToArray()).ToUpperInvariant();
+        if (!string.IsNullOrWhiteSpace(countryCode) && cleaned.StartsWith(countryCode, StringComparison.OrdinalIgnoreCase))
+        {
+            cleaned = cleaned[countryCode.Length..];
+        }
+
+        return cleaned;
     }
 }
