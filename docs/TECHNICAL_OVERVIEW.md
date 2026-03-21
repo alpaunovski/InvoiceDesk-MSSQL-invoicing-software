@@ -10,6 +10,7 @@ InvoiceDesk is a .NET 8 WPF desktop app for multi-company invoice management wit
 - Rendering: HTML-to-PDF templating in Rendering/InvoiceHtmlRenderer.cs; WebView2 prints to PDF with deterministic formatting and dual-currency notes when enabled.
 - UI: WPF windows/views under Views driven by ViewModels; culture changes propagate through LocalizedStrings helper and binding language updates.
 - Helpers: Localization, currency dual-display, hashing, logging, VAT options under Helpers; resources in Resources.
+- Authentication: WordPress plugin backend (`invoicedesk-auth`) with REST endpoints for login/validate/logout and admin session controls; desktop client uses `AuthService` + `AuthWorkflow` and stores tokens in Windows Credential Manager (DPAPI file fallback).
 
 ## Key Services
 - InvoiceService: draft creation/editing, issuing (transactional number allocation), totals calculation, immutability of issued invoices.
@@ -26,7 +27,13 @@ Primary settings live in appsettings.json:
 - Culture (default UI culture)
 - Pdf:OutputDirectory (defaults to exports under workspace)
 - Logging:FilePath and log levels
+- AuthApi:BaseUrl (WordPress REST root) and RequestTimeoutSeconds
 appsettings.json is copied to the output on build, so edits affect runtime.
+
+## Authentication & Licensing
+- Backend: see [docs/AUTH.md](AUTH.md) for table schema (`wp_invoicedesk_sessions`), `user_meta` keys (`max_sessions`, `account_status`), REST contract, and admin UI.
+- Client flow: startup validates cached token via `/validate`; otherwise shows `LoginWindow` and calls `/login` with device name; `/logout` deactivates server session; tokens expire in 24h and are pruned to `max_sessions` per user.
+- Storage: tokens kept in Credential Manager; fallback DPAPI file under `%LOCALAPPDATA%\InvoiceDesk` if writing credentials fails.
 
 ## Build and Run
 Prerequisites: .NET 8 SDK, SQL Server (LocalDB/Express/remote), Microsoft Edge WebView2 Runtime (Evergreen).

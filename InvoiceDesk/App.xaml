@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:InvoiceDesk"
              ShutdownMode="OnExplicitShutdown">
+    <!-- Keep the app alive while the login dialog is open; switched back to OnMainWindowClose after login. -->
     <Application.Resources>
     </Application.Resources>
 </Application>

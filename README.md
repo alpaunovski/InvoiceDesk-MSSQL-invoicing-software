@@ -11,6 +11,7 @@ Course project; not production-hardened. No warranty. Educational use only.
 - EF Core 8 (SQL Server) with IDbContextFactory
 - WebView2 for HTML→PDF (PrintToPdfAsync)
 - RESX localization: Strings.resx (en) and Strings.bg.resx (bg); SatelliteResourceLanguages limited to en;bg
+- Authentication/licensing: WordPress plugin backend (`invoicedesk-auth`) with token sessions and device limits
 
 ## Architecture Highlights
 - Layered WPF client: Views + ViewModels (async commands) over services; `ICompanyContext` scopes queries per company.
@@ -27,6 +28,8 @@ Course project; not production-hardened. No warranty. Educational use only.
 
 ## Configure
 1. Copy/update [InvoiceDesk/appsettings.json](InvoiceDesk/appsettings.json): set ConnectionStrings:Default.
+2. Set `AuthApi:BaseUrl` to your WordPress site REST root (e.g., `https://example.com/wp-json/invoicedesk/v1/`).
+3. Deploy/activate the WordPress plugin under `wordpress-plugin/invoicedesk-auth` on the same site (HTTPS required).
 2. Ensure the SQL login can create/alter the target database; the app will create it if missing.
 3. Optional: change Logging:FilePath (defaults to logs/app.log under workspace) and Pdf:OutputDirectory (defaults to exports under workspace).
 
@@ -70,3 +73,4 @@ dotnet run --project InvoiceDesk
 - Per-line VAT type selection (domestic, intra-EU reverse charge, export, exempt)
 - Runtime culture switching with persisted preference
 - Automatic VIES VAT validation on customer save (EU member states and XI only)
+- Authentication with token-based sessions, device tracking, and admin revocation (see [docs/AUTH.md](docs/AUTH.md))

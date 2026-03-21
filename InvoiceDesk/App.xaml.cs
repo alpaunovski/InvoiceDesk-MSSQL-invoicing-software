@@ -124,6 +124,7 @@ public partial class App : Application
 				await settingsService.SaveAsync(s);
 			};
 			logger.LogInformation("Showing MainWindow");
+			// Restore normal shutdown behavior now that the main window is ready (login used explicit shutdown).
 			ShutdownMode = ShutdownMode.OnMainWindowClose;
 			mainWindow.Show();
 		}
