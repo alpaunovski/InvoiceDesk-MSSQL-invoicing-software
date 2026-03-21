@@ -27,11 +27,11 @@ Course project; not production-hardened. No warranty. Educational use only.
 - Microsoft Edge WebView2 Runtime (Evergreen)
 
 ## Configure
-1. Copy/update [InvoiceDesk/appsettings.json](InvoiceDesk/appsettings.json): set ConnectionStrings:Default.
+1. Copy/update [InvoiceDesk/appsettings.json](InvoiceDesk/appsettings.json): set ConnectionStrings:Default (default now targets LocalDB: `(localdb)\\MSSQLLocalDB;Database=InvoiceDesk;Trusted_Connection=True;MultipleActiveResultSets=true;Connect Timeout=30`).
 2. Set `AuthApi:BaseUrl` to your WordPress site REST root (e.g., `https://example.com/wp-json/invoicedesk/v1/`).
 3. Deploy/activate the WordPress plugin under `wordpress-plugin/invoicedesk-auth` on the same site (HTTPS required).
-2. Ensure the SQL login can create/alter the target database; the app will create it if missing.
-3. Optional: change Logging:FilePath (defaults to logs/app.log under workspace) and Pdf:OutputDirectory (defaults to exports under workspace).
+4. Ensure the SQL login (LocalDB user) can create/alter the target database; the app will create it if missing.
+5. Optional: change Logging:FilePath (defaults to logs/app.log under workspace) and Pdf:OutputDirectory (defaults to exports under workspace).
 
 ## Database
 ```
@@ -48,6 +48,12 @@ dotnet build InvoiceDesk.sln
 dotnet clean InvoiceDesk.sln   # to clear bin/obj
 dotnet run --project InvoiceDesk
 ```
+
+## Installer (Inno Setup)
+1. Publish Release build:
+	- `dotnet publish InvoiceDesk/InvoiceDesk.csproj -c Release -r win-x64 --self-contained false /p:PublishSingleFile=false`
+2. Open and compile [tools/installer/InvoiceDesk.iss](tools/installer/InvoiceDesk.iss) with Inno Setup Compiler.
+3. Ensure prerequisites are installed on target machines: Microsoft Edge WebView2 Runtime and .NET Desktop Runtime 8+ (LocalDB if you use the default connection string).
 
 ## Runtime Behavior
 - Multi-company isolation: services use `ICompanyContext` to scope queries.

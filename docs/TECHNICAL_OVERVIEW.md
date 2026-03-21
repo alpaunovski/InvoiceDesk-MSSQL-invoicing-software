@@ -22,8 +22,8 @@ InvoiceDesk is a .NET 8 WPF desktop app for multi-company invoice management wit
 - UserSettingsService/LanguageService: persists user-selected culture and preferences.
 
 ## Configuration
-Primary settings live in appsettings.json:
-- ConnectionStrings:Default (SQL Server)
+ Primary settings live in appsettings.json:
+- ConnectionStrings:Default (SQL Server; default points to LocalDB `(localdb)\\MSSQLLocalDB`)
 - Culture (default UI culture)
 - Pdf:OutputDirectory (defaults to exports under workspace)
 - Logging:FilePath and log levels
