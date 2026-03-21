@@ -6,6 +6,8 @@ using System.Windows;
 using InvoiceDesk.Data;
 using InvoiceDesk.Helpers;
 using InvoiceDesk.Rendering;
+using InvoiceDesk.Models;
+using InvoiceDesk.Services.Auth;
 using InvoiceDesk.Services;
 using InvoiceDesk.ViewModels;
 using InvoiceDesk.Views;
@@ -55,6 +57,15 @@ public partial class App : Application
 			logger.LogInformation("Host built");
 			await _host.StartAsync();
 			logger.LogInformation("Host started");
+
+			var authWorkflow = _host.Services.GetRequiredService<AuthWorkflow>();
+			var authenticated = await authWorkflow.EnsureAuthenticatedAsync();
+			if (!authenticated)
+			{
+				logger.LogWarning("Authentication failed or was cancelled");
+				Shutdown();
+				return;
+			}
 
 			Resources["Loc"] = _host.Services.GetRequiredService<LocalizedStrings>();
 
@@ -113,6 +124,7 @@ public partial class App : Application
 				await settingsService.SaveAsync(s);
 			};
 			logger.LogInformation("Showing MainWindow");
+			ShutdownMode = ShutdownMode.OnMainWindowClose;
 			mainWindow.Show();
 		}
 		catch (Exception ex)
@@ -158,6 +170,13 @@ public partial class App : Application
 		{
 			var connectionString = context.Configuration.GetConnectionString("Default")
 								   ?? throw new InvalidOperationException("Missing connection string");
+
+			services.Configure<AuthOptions>(context.Configuration.GetSection("AuthApi"));
+			services.AddSingleton<ITokenStore, TokenStore>();
+			services.AddHttpClient<IAuthService, AuthService>();
+			services.AddSingleton<AuthWorkflow>();
+			services.AddTransient<LoginViewModel>();
+			services.AddTransient<LoginWindow>();
 
 			services.AddSingleton<LocalizedStrings>();
 			services.Configure<CurrencyDisplayOptions>(context.Configuration.GetSection("CurrencyDisplay"));
